@@ -1,0 +1,16 @@
+{
+  "extends": "@quasar/app/tsconfig-preset",
+  "compilerOptions": {
+    "baseUrl": "."
+  },
+  "tslint.typeCheck": true,
+  "rules": {
+    "no-trailing-whitespace": [true, "always"],
+    "prefer-const": [true, {
+      "destructuring": "any"
+    }],
+    "semicolon": [true, "always"],
+    "space-before-function-paren": [true, "never"],
+    "quotemark": [true, "single"]
+  }
+}
