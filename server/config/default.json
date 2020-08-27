@@ -9,7 +9,7 @@
   "authentication": {
     "entity": "user",
     "service": "users",
-    "secret": "NrquNxELOqZR2JkLe3ozP+Mk3q4=",
+    "secret": "xK2OypT1Jeg7+xE5BsEHdiGUrQ8=",
     "authStrategies": [
       "jwt",
       "local"
@@ -45,5 +45,5 @@
       }
     }
   },
-  "nedb": "../data"
+  "mongodb": "mongodb://localhost:27017/server"
 }

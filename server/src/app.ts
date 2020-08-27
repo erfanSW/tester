@@ -7,7 +7,7 @@ import cors from 'cors';
 import feathers from '@feathersjs/feathers';
 import configuration from '@feathersjs/configuration';
 import express from '@feathersjs/express';
-import socketio from '@feathersjs/socketio';
+
 
 
 import { Application } from './declarations';
@@ -17,6 +17,7 @@ import services from './services';
 import appHooks from './app.hooks';
 import channels from './channels';
 import authentication from './authentication';
+import mongoose from './mongoose';
 // Don't remove this comment. It's needed to format import lines nicely.
 
 const app: Application = express(feathers());
@@ -35,7 +36,10 @@ app.use('/', express.static(app.get('public')));
 
 // Set up Plugins and providers
 app.configure(express.rest());
-app.configure(socketio());
+
+
+app.configure(mongoose);
+
 
 // Configure other middleware (see `middleware/index.js`)
 app.configure(middleware);
