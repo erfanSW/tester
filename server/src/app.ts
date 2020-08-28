@@ -17,7 +17,7 @@ import services from './services';
 import appHooks from './app.hooks';
 import channels from './channels';
 import authentication from './authentication';
-import mongoose from './mongoose';
+import objection from './objection';
 // Don't remove this comment. It's needed to format import lines nicely.
 
 const app: Application = express(feathers());
@@ -38,7 +38,7 @@ app.use('/', express.static(app.get('public')));
 app.configure(express.rest());
 
 
-app.configure(mongoose);
+app.configure(objection);
 
 
 // Configure other middleware (see `middleware/index.js`)

@@ -1,8 +1,17 @@
-import { Service, MongooseServiceOptions } from 'feathers-mongoose';
+import { Service, ObjectionServiceOptions } from 'feathers-objection';
 import { Application } from '../../declarations';
 
+interface Options extends ObjectionServiceOptions {
+  Model: any;
+}
+
 export class Users extends Service {
-  constructor(options: Partial<MongooseServiceOptions>, app: Application) {
-    super(options);
+  constructor(options: Partial<Options>, app: Application) {
+    const { Model, ...otherOptions } = options;
+
+    super({
+      ...otherOptions,
+      model: Model
+    });
   }
 }

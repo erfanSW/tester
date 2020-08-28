@@ -9,7 +9,7 @@
   "authentication": {
     "entity": "user",
     "service": "users",
-    "secret": "xK2OypT1Jeg7+xE5BsEHdiGUrQ8=",
+    "secret": "7RdArAyecyR76tmwN5yUi8MAVgI=",
     "authStrategies": [
       "jwt",
       "local"
@@ -33,17 +33,11 @@
         "key": "<auth0 oauth key>",
         "secret": "<auth0 oauth secret>",
         "subdomain": "<auth0 subdomain>"
-      },
-      "google": {
-        "key": "<google oauth key>",
-        "secret": "<google oauth secret>",
-        "scope": [
-          "email",
-          "profile",
-          "openid"
-        ]
       }
     }
   },
-  "mongodb": "mongodb://localhost:27017/server"
+  "postgres": {
+    "client": "pg",
+    "connection": "postgres://postgres:@localhost:5432/server"
+  }
 }
