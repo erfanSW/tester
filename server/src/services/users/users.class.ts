@@ -1,17 +1,8 @@
-import { Service, ObjectionServiceOptions } from 'feathers-objection';
+import { Service, SequelizeServiceOptions } from 'feathers-sequelize';
 import { Application } from '../../declarations';
 
-interface Options extends ObjectionServiceOptions {
-  Model: any;
-}
-
 export class Users extends Service {
-  constructor(options: Partial<Options>, app: Application) {
-    const { Model, ...otherOptions } = options;
-
-    super({
-      ...otherOptions,
-      model: Model
-    });
+  constructor(options: Partial<SequelizeServiceOptions>, app: Application) {
+    super(options);
   }
 }

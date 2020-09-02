@@ -9,7 +9,7 @@
   "authentication": {
     "entity": "user",
     "service": "users",
-    "secret": "7RdArAyecyR76tmwN5yUi8MAVgI=",
+    "secret": "VOCdtgLpBJQo5vGYN82Oat0TTac=",
     "authStrategies": [
       "jwt",
       "local"
@@ -26,18 +26,16 @@
     "local": {
       "usernameField": "email",
       "passwordField": "password"
-    },
-    "oauth": {
-      "redirect": "/",
-      "auth0": {
-        "key": "<auth0 oauth key>",
-        "secret": "<auth0 oauth secret>",
-        "subdomain": "<auth0 subdomain>"
-      }
     }
   },
   "postgres": {
     "client": "pg",
-    "connection": "postgres://postgres:@localhost:5432/server"
+    "connection": {
+      "host": "localhost",
+      "port": 5432,
+      "user": "postgres",
+      "password": "",
+      "database": "tester"
+    }
   }
 }
