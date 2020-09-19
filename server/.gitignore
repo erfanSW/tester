@@ -41,4 +41,4 @@ ormconfug.json
 uploads/
 
 # trained data for ocr
-server/eng.traineddata
+eng.traineddata
