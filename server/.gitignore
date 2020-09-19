@@ -37,3 +37,8 @@ lerna-debug.log*
 ormconfug.json
 
 .env
+
+uploads/
+
+# trained data for ocr
+server/eng.traineddata
