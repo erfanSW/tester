@@ -2,26 +2,23 @@ import {
   Controller,
   Get,
   Post,
-  Req,
-  Res,
   Body,
-  Catch,
-  UseFilters,
-  HttpException,
   ParseIntPipe,
   Param,
-  Query,
+  Put,
 } from '@nestjs/common';
-import { Request, Response } from 'express';
 import { RolesService } from './roles.service';
 import { RoleDto } from './dto/roles.dto';
-import { HttpExceptionFilter } from '../exeptions/filters/http-exception.filter';
-import { get } from 'http';
 
 @Controller('roles')
 // @UseFilters(new HttpExceptionFilter())
 export class RolesController {
   constructor(private readonly rolesService: RolesService) {}
+
+  @Get()
+  async getAll() {
+    return await this.rolesService.getAll();
+  }
 
   @Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: number) {
@@ -31,5 +28,10 @@ export class RolesController {
   @Post()
   async create(@Body() role: RoleDto) {
     return await this.rolesService.createOne(role);
+  }
+
+  @Put()
+  async update(@Body() role: RoleDto) {
+    return await this.rolesService.updateOne(role);
   }
 }
