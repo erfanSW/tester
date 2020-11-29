@@ -18,4 +18,13 @@ export class RolesService {
   findOne(id: number) {
     return this.rolesRepository.findOne(id);
   }
+
+  getAll() {
+    return this.rolesRepository.find();
+  }
+
+  updateOne(role: RoleInterface) {
+    const { id, ...rest } = role;
+    return this.rolesRepository.update(id, { ...rest });
+  }
 }
