@@ -6,6 +6,7 @@ import { RolesModule } from './roles/roles.module';
 import { UserModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { OcrModule } from './ocr/ocr.module';
+import { DocumentModule } from './document/document.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { OcrModule } from './ocr/ocr.module';
     AuthModule,
     OcrModule,
     TypeOrmModule.forRoot(),
+    DocumentModule,
   ],
   controllers: [AppController],
   providers: [AppService],
