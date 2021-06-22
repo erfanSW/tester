@@ -20,25 +20,27 @@ export class DocumentService {
   }
 
   getAll() {
-    return this.documentRepository
-      .createQueryBuilder('document')
-      .select([
-        'document.id',
-        'document.name',
-        'document.data',
-        'new_pa.id',
-        'new_pa.username',
-        'new_pa.phone',
-        'new_role.name',
-        'new_role.id'
-      ])
-      .leftJoin('document.patient', 'new_pa')
-      .leftJoin('new_pa.role', 'new_role')
-      .getMany();
+    return this.documentRepository.find();
+  }
+
+  deleteOne(id: number) {
+    return this.documentRepository.delete({ id });
+  }
+
+  getByUser(user) {
+    return this.documentRepository.find({
+      where: [{ patient: { id: user } }, { doctor: { id: user } }],
+    });
+  }
+
+  getByUserAndDoc(user: number, id: number) {
+    return this.documentRepository.findOne({
+      where: [{ patient: { id: user } }, { id }],
+    });
   }
 
   updateOne(role: DocumentInterface) {
     const { id, ...rest } = role;
-    // return this.documentRepository.update(id, { ...rest });
+    return this.documentRepository.update(id, { ...rest });
   }
 }

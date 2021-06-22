@@ -1,6 +1,9 @@
+import { Role } from "src/roles/roles.entity";
+
 export interface UserInterface {
   id?: number;
-  username: string;
+  fullname: string;
   password?: string;
-  role?: number;
+  phone?: string;
+  role?: Role;
 }

@@ -9,4 +9,7 @@ export class Role {
     unique: true,
   })
   name: string;
+
+  @Column('text', { array: true, nullable: true })
+  access: string[];
 }

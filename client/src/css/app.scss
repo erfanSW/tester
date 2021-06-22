@@ -1,1 +1,38 @@
 // app global css in SCSS form
+@font-face {
+  font-family: IranSans;
+  src: url('../assets/fonts/IRANSansWeb(FaNum).woff')
+}
+
+* {
+  font-family: 'IranSans'
+}
+
+.ltr {
+    direction: rtl;
+}
+
+::-webkit-scrollbar {
+  height: 12px;
+  width: 10px;
+  background: transparent;
+  z-index: 12;
+  overflow: visible;
+}
+
+::-webkit-scrollbar-thumb {
+  width: 10px;
+  background-color: #e7effd;
+  border-radius: 25px;
+  z-index: 12;
+  border: 4px solid rgba(0, 0, 0, 0);
+  background-clip: revert;
+  transition: background-color .32s ease-in-out;
+  margin: 4px;
+  height: 15px;
+  width: 7px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(47, 21, 118, 0.09);
+}

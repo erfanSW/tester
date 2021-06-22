@@ -1,11 +1,15 @@
-export class UserDto {
-  username: string;
-  password: string;
-  role: number;
+import { Role } from "src/roles/roles.entity";
 
-  constructor(username, password, role) {
-    this.username = username;
-    this.password = password;
-    this.role = role;
-  }
-}
+export class UserDto {
+         fullname: string;
+         password: string;
+         role: Role;
+         phone: string;
+
+         constructor(fullname, password, role, phone) {
+           this.fullname = fullname;
+           this.password = password;
+           this.role = role;
+           this.phone = phone;
+         }
+       }

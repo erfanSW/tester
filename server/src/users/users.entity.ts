@@ -1,4 +1,11 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { Role } from '../roles/roles.entity';
 
 @Entity()
@@ -7,16 +14,17 @@ export class Users {
   id: number;
 
   @Column()
-  username: string;
+  fullname: string;
 
-  @Column({ nullable: true })
+  @Column({ unique: true })
   phone: string;
-
-  @Column()
-  password: string;
 
   @ManyToOne(type => Role, {
     onDelete: 'SET NULL',
+    eager: true,
   })
-  role: number;
+  role: Role;
+
+  @CreateDateColumn({ name: 'created_at' }) 'created_at': Date;
+  @UpdateDateColumn({ name: 'updated_at' }) 'updated_at': Date;
 }

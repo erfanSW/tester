@@ -1,14 +1,5 @@
 <template>
-  <div>
-    <p>{{ title }}</p>
-    <ul>
-      <li v-for="todo in todos" :key="todo.id" @click="increment">{{ todo.id }} - {{ todo.content }}</li>
-    </ul>
-    <p>Count: {{ todoCount }} / {{ meta.totalCount }}</p>
-    <p>Active: {{ active ? 'yes' : 'no' }}</p>
-    <p>Clicks on todos: {{ clickCount }}</p>
-    <button type="button" @click="mutateMutable">{{mutable}}</button>
-  </div>
+  <div></div>
 </template>
 
 <script lang="ts">
@@ -20,7 +11,7 @@ import {
   ref,
   toRef,
   Ref,
-  onMounted,
+  onMounted
 } from "@vue/composition-api";
 import { Todo, Meta } from "./models";
 
@@ -42,7 +33,7 @@ function useDisplayTodo(todos: Ref<Todo[]>) {
 function useCom() {
   let mutable = ref(1);
 
-  const mutateMutable = function () {
+  const mutateMutable = function() {
     mutable.value += 1;
   };
 
@@ -54,25 +45,25 @@ export default defineComponent({
   props: {
     title: {
       type: String,
-      required: true,
+      required: true
     },
     todos: {
       type: (Array as unknown) as PropType<Todo[]>,
-      default: () => [],
+      default: () => []
     },
     meta: {
       type: (Object as unknown) as PropType<Meta>,
-      required: true,
+      required: true
     },
     active: {
-      type: Boolean,
-    },
+      type: Boolean
+    }
   },
   setup(props) {
-    const myfunc = function () {
+    const myfunc = function() {
       console.log(12);
     };
-    const yourfunc = function () {
+    const yourfunc = function() {
       console.log(12);
     };
     onMounted(myfunc);
@@ -81,8 +72,8 @@ export default defineComponent({
     return {
       ...useClickCount(),
       ...useDisplayTodo(toRef(props, "todos")),
-      ...useCom(),
+      ...useCom()
     };
-  },
+  }
 });
 </script>
