@@ -1,6 +1,9 @@
 export class RoleDto {
   name: string;
-  constructor(name) {
+  access: string[];
+
+  constructor(name, access) {
     this.name = name;
+    this.access = access;
   }
 }

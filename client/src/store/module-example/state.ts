@@ -1,9 +1,9 @@
 export interface ExampleStateInterface {
-  prop: boolean;
+  progress: number;
 }
 
 const state: ExampleStateInterface = {
-  prop: false
+  progress: 0
 }
 
 export default state

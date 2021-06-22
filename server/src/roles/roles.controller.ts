@@ -11,7 +11,6 @@ import { RolesService } from './roles.service';
 import { RoleDto } from './dto/roles.dto';
 
 @Controller('roles')
-// @UseFilters(new HttpExceptionFilter())
 export class RolesController {
   constructor(private readonly rolesService: RolesService) {}
 

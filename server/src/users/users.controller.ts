@@ -1,4 +1,6 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { RoleGuard } from '../guards/RoleGuard';
 import { UsersService } from './users.service';
 import { UserDto } from './dto/users.dto';
 
@@ -11,13 +13,18 @@ export class UsersController {
     return this.userService.findAll();
   }
 
-  @Get()
-  findOne(user: UserDto) {
-    return this.userService.findOne(user);
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.userService.findOne(id);
   }
 
   @Post()
   async create(@Body() user: UserDto) {
     return await this.userService.createOne(user);
+  }
+
+  @Put()
+  async update(@Body() user: UserDto) {
+    return await this.userService.updateOne(user);
   }
 }

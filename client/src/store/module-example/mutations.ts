@@ -1,10 +1,11 @@
-import { MutationTree } from 'vuex'
-import { ExampleStateInterface } from './state'
+import { stat } from "fs";
+import { MutationTree } from "vuex";
+import { ExampleStateInterface } from "./state";
 
 const mutation: MutationTree<ExampleStateInterface> = {
-  someMutation (/* state: ExampleStateInterface */) {
-    // your code
+  updateProgress(state: ExampleStateInterface, value: number) {
+    state.progress = value;
   }
-}
+};
 
-export default mutation
+export default mutation;
