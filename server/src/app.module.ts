@@ -11,6 +11,7 @@ import { CommentModule } from './comment/comment.module';
 import { ConfigModule } from '@nestjs/config';
 import * as fsStore from 'cache-manager-fs-hash';
 import { MongooseModule } from '@nestjs/mongoose';
+import { RequestsModule } from './requests/requests.module';
 
 
 @Module({
@@ -33,6 +34,7 @@ import { MongooseModule } from '@nestjs/mongoose';
     TypeOrmModule.forRoot({ synchronize: true }),
     DocumentModule,
     CommentModule,
+    RequestsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RoleGuard } from '../guards/RoleGuard';
 import { UsersService } from './users.service';
@@ -16,6 +24,11 @@ export class UsersController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.userService.findOne(id);
+  }
+
+  @Get('/doctors/all')
+  findDoctors() {
+    return this.userService.findAllDoctors();
   }
 
   @Post()

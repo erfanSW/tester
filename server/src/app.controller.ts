@@ -78,6 +78,7 @@ export class AppController {
         const exisiting_user = await this.userService.findOne(new_user);
         if (!exisiting_user) {
           const result = await this.userService.createOne(new_user);
+        console.log(10);
           await this.cacheManager.del(user.phone);
           return this.authService.login(result);
         } else {

@@ -33,9 +33,11 @@ export class DocumentController {
     else return [];
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
-  async findOne(@Param('id', ParseIntPipe) id: number) {
-    const result = await this.documentService.findOne(id);
+  async findOne(@Param('id', ParseIntPipe) id: number, @Request() req) {
+    const user = await this.usersService.findOne({ id: req.user.userId });
+    const result = await this.documentService.findOne(id, user.id);
     if (!result) {
       throw new HttpException('یافت نشد !', HttpStatus.NOT_FOUND);
     }

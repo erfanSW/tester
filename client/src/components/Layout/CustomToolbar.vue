@@ -69,7 +69,7 @@ import { defineComponent, ref } from "@vue/composition-api";
 export default defineComponent({
   name: "CustomToolbar",
   components: {},
-  setup() {
+  setup(props) {
     const drawer = ref<boolean>(false);
     const miniState = ref<boolean>(true);
 

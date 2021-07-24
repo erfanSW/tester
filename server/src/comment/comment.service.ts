@@ -15,16 +15,24 @@ export class CommentService {
     return this.commentRepository.save(comment);
   }
 
-  findOne(id: number) {
-    return this.commentRepository.findOne(id);
+  findByDocument(id: number) {
+    return this.commentRepository.find({ where: { document: id } });
   }
 
   getAll() {
-    return this.commentRepository.find()
+    return this.commentRepository.find();
   }
 
   updateOne(role: CommentInterface) {
     const { id, ...rest } = role;
     return this.commentRepository.update(id, { ...rest });
+  }
+
+  updateText(id: number, text: string) {
+    return this.commentRepository.update(id, { text });
+  }
+
+  deleteOne(id: number) {
+    return this.commentRepository.delete({ id });
   }
 }

@@ -15,8 +15,13 @@ export class DocumentService {
     return this.documentRepository.save(document);
   }
 
-  findOne(id: number) {
-    return this.documentRepository.findOne(id);
+  findOne(id: number, user: number) {
+    return this.documentRepository.findOne({
+      where: [
+        { id, doctor: { id: user } },
+        { id, patient: { id: user } },
+      ],
+    });
   }
 
   getAll() {
