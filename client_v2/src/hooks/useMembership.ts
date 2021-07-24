@@ -1,3 +1,4 @@
+import { ref } from 'vue';
 import User from '../services/UserService';
 import { UserInterface, OtpType, OtpResponse } from '../interfaces/User';
 import { useQuasar } from 'quasar';
@@ -7,6 +8,7 @@ import { AxiosError } from 'axios';
 function useMembership() {
   const $q = useQuasar();
   const $router = useRouter();
+  const doctors = ref<UserInterface[]>([]);
 
   async function register(user: UserInterface) {
     try {
@@ -107,7 +109,14 @@ function useMembership() {
     }
   }
 
-  return { register, signup, validateOtp };
+  async function getDoctors() {
+    try {
+      const result = await User.getDoctors();
+      doctors.value = result.data as UserInterface[];
+    } catch (error) {}
+  }
+
+  return { register, signup, validateOtp, getDoctors, doctors };
 }
 
 export { useMembership };

@@ -1,15 +1,23 @@
 <template>
   <q-page padding class="q-pa-lg rounded-borders shadow-24">
     <div
-      class="row document-container rounded-borders q-pa-md q-mt-md"
-      v-for="doc in documents"
-      :key="doc.id"
+      class="row request-container rounded-borders q-pa-md q-mt-md"
+      v-for="request in requestList"
+      :key="request.id"
     >
       <div class="doc-description-container row text-indigo-6">
         <div class="q-pa-sm">
-          <router-link class="router-link" :to="`/documents/${doc.id}`">
-            {{ doc.name }}
-          </router-link>
+          {{ request.text }}
+        </div>
+        <div class="q-mx-md q-pa-sm"><q-icon name="hdr_strong" /></div>
+        <div class="doc-created-at q-pa-sm">
+          <q-icon
+            name="iconly:boldProfile"
+            color="indigo-6"
+            size="xs"
+            class="q-mr-sm"
+          />
+          {{ request.applicant.fullname }}
         </div>
         <div class="q-mx-md q-pa-sm"><q-icon name="hdr_strong" /></div>
         <div class="doc-created-at q-pa-sm">
@@ -19,7 +27,7 @@
             size="xs"
             class="q-mr-sm"
           />
-          {{ formattedPersianDate(doc.created_at) }}
+          {{ formattedPersianDate(request.created_at) }}
         </div>
         <div class="q-mx-md q-pa-sm"><q-icon name="hdr_strong" /></div>
         <div class="doc-created-at q-pa-sm">
@@ -29,33 +37,40 @@
             class="q-mr-sm"
             color="indigo-6"
           />
-          {{ formattedPersianTime(doc.created_at) }}
-        </div>
-        <div class="q-mx-md q-pa-sm"><q-icon name="hdr_strong" /></div>
-        <div class="doc-data-comments q-pa-sm">
-          <q-icon
-            name="iconly:boldChat"
-            size="xs"
-            class="q-mr-sm"
-            color="indigo-6"
-          />
-          4
+          {{ formattedPersianTime(request.created_at) }}
         </div>
       </div>
       <q-space />
       <div class="card-document-action">
-        <q-btn
-          label="حذف"
-          size="sm"
-          class="bg-red-1 text-red q-mx-xs"
+        <q-badge
+          v-if="request.state !== 0"
+          :label="requestStateOptions[request.state]"
+          :class="
+            request.state == 1
+              ? 'bg-red-1 text-red'
+              : 'bg-green-1 text-positive'
+          "
+          class="q-pa-sm"
           flat
-          @click="deleteDocument(doc.id)"
+          dense
         />
         <q-btn
-          label="ویرایش"
-          size="sm"
-          class="bg-indigo-1 text-indigo-6 q-mx-xs"
+          v-if="request.state !== 2"
+          icon="check_circle_outline"
+          color="positive"
+          @click="changeRequestState(request.id, 2)"
+          class="q-mx-sm"
           flat
+          dense
+        />
+        <q-btn
+          v-if="request.state !== 1"
+          icon="highlight_off"
+          color="red"
+          @click="changeRequestState(request.id, 1)"
+          class="q-mx-sm"
+          flat
+          dense
         />
       </div>
       <div class="col-12">
@@ -63,12 +78,12 @@
           class="col-12 q-mt-lg"
           icon="list"
           label="لیست داده ها"
-          :caption="objectPropertyCounter(doc.data) + ' مورد'"
+          :caption="objectPropertyCounter(request.document.data) + ' مورد'"
           header-class="bg-grey-1 text-indigo-6"
         >
           <q-table
             class="q-mt-md"
-            :rows="convertDataToTable(doc.data)"
+            :rows="convertDataToTable(request.document.data)"
             :columns="dataColumns"
             row-key="name"
             separator="none"
@@ -90,15 +105,21 @@
 
 <script lang="ts">
 import { defineComponent, onMounted } from 'vue';
-import { useDocument } from '../hooks/useDocument';
+import { useRequest } from '../hooks/useRequest';
 import { usePdate } from '../hooks/usePdate';
 import { DocumentData } from '../interfaces/Document';
 
 export default defineComponent({
   name: 'PageIndex',
   setup() {
-    const { documents, getDocuments, deleteDocument } = useDocument();
-    onMounted(() => getDocuments());
+    const {
+      requestList,
+      getRequests,
+      deleteDocument,
+      requestStateOptions,
+      changeRequestState,
+    } = useRequest();
+    onMounted(() => getRequests());
 
     const { formattedPersianDate, formattedPersianTime } = usePdate();
 
@@ -131,13 +152,15 @@ export default defineComponent({
     };
 
     return {
-      documents,
+      requestList,
       formattedPersianDate,
       formattedPersianTime,
       objectPropertyCounter,
       dataColumns,
       convertDataToTable,
       deleteDocument,
+      changeRequestState,
+      requestStateOptions,
     };
   },
 });
@@ -147,7 +170,8 @@ export default defineComponent({
 .router-link {
   text-decoration: none;
 }
-.document-container {
+
+.request-container {
   border: 2px dashed #eeeeee;
 }
 </style>

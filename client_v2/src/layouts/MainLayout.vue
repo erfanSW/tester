@@ -33,6 +33,18 @@
             </q-item-section>
           </q-item>
         </router-link>
+        <router-link class="router-link" to="/requests">
+          <q-item>
+            <q-item-section avatar>
+              <q-icon
+                flat
+                name="add_moderator"
+                :color="$route.path == '/requests' ? 'indigo-6' : 'indigo-2'"
+                size="25px"
+              />
+            </q-item-section>
+          </q-item>
+        </router-link>
       </q-list>
     </q-drawer>
 

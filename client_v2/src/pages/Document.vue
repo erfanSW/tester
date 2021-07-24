@@ -70,6 +70,26 @@
           </template>
         </q-table>
 
+        <div class="row">
+          <q-select
+            :options="doctors"
+            class="col-6 q-pa-sm"
+            map-option
+            option-label="fullname"
+            option-value="id"
+            emit-value
+            outlined
+            dense
+          />
+          <div class="col-6 q-py-sm">
+            <q-btn
+              label="ارسال درخواست"
+              class="bg-indigo-1 text-indigo-6"
+              flat
+            />
+          </div>
+        </div>
+
         <div class="q-mt-xl row justify-center">
           <q-timeline color="indigo-6" layout="loose">
             <q-timeline-entry
@@ -159,6 +179,7 @@ import { useDocument } from '../hooks/useDocument';
 import { usePdate } from '../hooks/usePdate';
 import { DocumentData } from '../interfaces/Document';
 import { useComment } from '../hooks/useComments';
+import { useMembership } from '../hooks/useMembership';
 
 export default defineComponent({
   name: 'PageIndex',
@@ -174,8 +195,11 @@ export default defineComponent({
       deleteComment,
     } = useComment();
 
+    const { getDoctors, doctors } = useMembership();
+
     onMounted(() => getOneDocument($route.params.id as string));
     onMounted(() => getCommentsByDocument($route.params.id as string));
+    onMounted(() => getDoctors());
 
     const { formattedPersianDate, formattedPersianTime, diffDateText } =
       usePdate();
@@ -222,6 +246,7 @@ export default defineComponent({
       commentText,
       createCommentLoading,
       requestedDoc,
+      doctors,
     };
   },
 });

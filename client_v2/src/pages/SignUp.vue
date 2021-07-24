@@ -20,8 +20,6 @@
         borderless
         :options="role_list"
         map-options
-        option-label="name"
-        option-value="id"
         emit-value
         v-model="user.role"
         label="انتخاب کنید"
@@ -66,7 +64,10 @@ export default defineComponent({
 
     const { signup } = useMembership();
 
-    const role_list = computed(() => []);
+    const role_list = computed(() => [
+      { label: 'بیمار', value: 1 },
+      { label: 'دکتر', value: 2 },
+    ]);
     const areAllFieldsFilledIn = computed(() =>
       Object.getOwnPropertyNames(user.value).every((field) => user.value[field])
     );
