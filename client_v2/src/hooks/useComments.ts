@@ -1,5 +1,6 @@
 import { ref } from 'vue';
-import { CommentInterface } from 'src/interfaces/Comment';
+import { CommentDto } from 'src/interfaces/Comment';
+import { CommentInterface } from 'src/interfaces/User';
 import Comment from '../services/CommentService';
 
 function useComment() {
@@ -14,7 +15,7 @@ function useComment() {
     } catch (error) {}
   }
 
-  async function createComment(comment: CommentInterface) {
+  async function createComment(comment: CommentDto) {
     try {
       createCommentLoading.value = true;
       await Comment.create(comment);

@@ -7,8 +7,7 @@
             <q-icon class="q-mr-sm" name="iconly:boldInfo-Square" size="xs" />
             نام آزمایش
           </label>
-          <q-input v-model="name" class="q-mt-md" dense outlined>
-          </q-input>
+          <q-input v-model="name" class="q-mt-md" dense outlined> </q-input>
         </div>
         <div class="col-xs-12 col-md-6 q-pa-sm">
           <label class="text-indigo-6">
@@ -25,9 +24,9 @@
           </q-file>
         </div>
       </div>
-      <q-markup-table class="q-mt-xl q-mx-sm" flat bordered square v-if="image">
+      <q-markup-table class="q-mt-xl q-mx-sm" flat bordered>
         <thead>
-          <tr class="q-mt-md">
+          <tr class="q-mt-md bg-indigo text-white">
             <th class="text-left">عنوان</th>
             <th class="text-right">مقدار</th>
             <th class="text-right"></th>
@@ -37,13 +36,13 @@
           <tr v-for="(line, index) in form_fields" :key="index">
             <td class="text-left">
               <div class="key">{{ line[0] }}</div>
-              <q-popup-edit :value="line[0]">
+              <q-popup-edit :model-value="line[0]">
                 <q-input v-model="line[0]" dense autofocus counter />
               </q-popup-edit>
             </td>
             <td class="text-right">
               <div class="value">{{ line[1] }}</div>
-              <q-popup-edit :value="line[1]">
+              <q-popup-edit :model-value="line[1]">
                 <q-input v-model="line[1]" dense autofocus counter />
               </q-popup-edit>
             </td>
@@ -76,10 +75,10 @@
           </tr>
         </tbody>
       </q-markup-table>
-      <div class="row q-mt-md q-mb-lg" v-if="0">
+      <div class="row q-mt-md q-mb-lg">
         <q-input
           v-model="key_input"
-          class="col-5 q-pa-sm"
+          class="col-6 q-pa-sm"
           outlined
           dense
           label="یک رشته را وارد کنید"
@@ -91,31 +90,32 @@
           dense
           label="یک مقدار وارد کنید"
         />
-        <div class="col-2 q-pa-sm">
+        <div class="col-1 q-pa-sm" dir="ltr">
           <q-btn
             @click="add_field(key_input, value_input)"
-            class="q-pa-sm"
-            color="positive"
-            icon="add"
+            class="bg-indigo-1 text-indigo full-width q-pa-sm"
+            label="افزودن"
             dense
             flat
           />
         </div>
       </div>
-      <q-btn
-        label="ثبت نهایی"
-        class="q-ma-sm q-mt-lg float-right"
-        color="indigo-6"
-        @click="createDocument({ name, data: documentData })"
-      />
-      <q-btn
-        outline
-        v-if="image"
-        label="لغو"
-        class="q-mt-md q-ml-sm"
-        color="red"
-        @click="clear_all"
-      />
+      <div dir="ltr">
+        <q-btn
+          label="ثبت نهایی"
+          class="bg-indigo-6 text-white q-ma-sm q-mt-lg"
+          @click="createDocument({ name, data: documentData })"
+          flat
+        />
+        <q-btn
+          outline
+          v-if="image"
+          label="لغو"
+          class="q-mt-md q-ml-sm"
+          color="red"
+          @click="clear_all"
+        />
+      </div>
     </q-page>
   </div>
 </template>
@@ -134,7 +134,7 @@ export default defineComponent({
     const name = ref<string>('');
     const key_input = ref<string>('');
     const value_input = ref<string>('');
-    const form_fields = ref<string[][]>([[]]);
+    const form_fields = ref<string[][]>([]);
     const image = ref();
     const imageText = ref<string>('');
     const imageLines = computed((): string[][] =>
@@ -142,9 +142,24 @@ export default defineComponent({
         .split('\n')
         .filter((line) => !!line)
         .map((line) => line.trim())
-        .map((line) => line.split(/([0-9]+)/))
-        .map((line) => line.slice(0, 2))
-        .filter((line) => line[0] && line[1])
+        .map((line) => {
+          const lineParts: string[] = line
+            .split(/[\s\t]/)
+            .filter((val) => !!val);
+          const firstNumber: number = lineParts.findIndex((part) =>
+            /[^a-zA-Z]/.test(part)
+          );
+          const keyName: string = lineParts.slice(0, firstNumber).join(' ');
+          const value: string = lineParts[firstNumber];
+          const JunklessValue = value
+            ? value
+                .split('')
+                .filter((val) => /[0-9\.]/.test(val))
+                .join('')
+            : '';
+          return [keyName, JunklessValue];
+        })
+        .filter((part) => part[0] !== '' && /^[0-9]/.test(part[1]))
     );
 
     const add_field = function (key: string, value: string) {
@@ -210,7 +225,7 @@ export default defineComponent({
     });
 
     watch(imageLines, (val) => {
-      form_fields.value = val;
+      form_fields.value = [...form_fields.value, ...val];
       Notify.create({
         message: 'برای ویرایش هر قسمت روی آن کلیک کنید',
         position: 'bottom',

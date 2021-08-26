@@ -82,6 +82,12 @@ function useMembership() {
           secure: true,
         });
       }
+      if (data.user) {
+        $q.cookies.set('user', data.user as string, {
+          expires: 1,
+          secure: true,
+        });
+      }
       await $router.push({
         path: '/',
       });

@@ -1,8 +1,8 @@
 import Api from './Api';
-import { CommentInterface } from 'src/interfaces/Comment';
+import { CommentDto } from 'src/interfaces/Comment';
 
 export default class Comment {
-  static create(comment: CommentInterface) {
+  static create(comment: CommentDto) {
     return Api().post('comments', comment);
   }
 

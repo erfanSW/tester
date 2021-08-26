@@ -45,6 +45,30 @@
             </q-item-section>
           </q-item>
         </router-link>
+        <router-link class="router-link" to="/activity">
+          <q-item>
+            <q-item-section avatar>
+              <q-icon
+                flat
+                name="timeline"
+                :color="$route.path == '/activity' ? 'indigo-6' : 'indigo-2'"
+                size="25px"
+              />
+            </q-item-section>
+          </q-item>
+        </router-link>
+        <router-link class="router-link" to="/activity_chart">
+          <q-item>
+            <q-item-section avatar>
+              <q-icon
+                flat
+                name="bar_chart"
+                :color="$route.path == '/activity_chart' ? 'indigo-6' : 'indigo-2'"
+                size="25px"
+              />
+            </q-item-section>
+          </q-item>
+        </router-link>
       </q-list>
     </q-drawer>
 

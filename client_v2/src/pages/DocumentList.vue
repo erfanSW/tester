@@ -148,6 +148,7 @@ export default defineComponent({
   text-decoration: none;
 }
 .document-container {
-  border: 2px dashed #eeeeee;
+  box-shadow: 0 0 5px #eeeeee;
+  border-radius: 10px;
 }
 </style>

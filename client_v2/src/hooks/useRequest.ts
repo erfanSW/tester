@@ -1,20 +1,32 @@
 import { ref } from 'vue';
-import { DocumentInterface, DocumentData } from 'src/interfaces/Document';
+import { DocumentData } from 'src/interfaces/Document';
+import { RequestInterface } from 'src/interfaces/Request';
 import Request from '../services/RequestService';
-import { useRouter } from 'vue-router';
 import { useQuasar } from 'quasar';
 
 function useRequest() {
   const requestList = ref<DocumentData[]>([]);
   const requestedDoc = ref<DocumentData[]>([]);
-  const $router = useRouter();
+  const newRequest = ref<RequestInterface>({
+    text: '',
+    doctor: null as unknown as number,
+    document: null as unknown as number,
+  });
   const $q = useQuasar();
 
-  const requestStateOptions = ['نامشخص','رد شده','پذیرفته شده']
+  const requestStateOptions = ['نامشخص', 'رد شده', 'پذیرفته شده'];
 
   async function getRequests() {
     try {
       const result = await Request.getAll();
+      requestList.value = [];
+      requestList.value = result.data as DocumentData[];
+    } catch (error) {}
+  }
+
+  async function getRequestsByDocument(documentId: number) {
+    try {
+      const result = await Request.getByDoc(documentId);
       requestList.value = [];
       requestList.value = result.data as DocumentData[];
     } catch (error) {}
@@ -38,10 +50,12 @@ function useRequest() {
     } catch (error) {}
   }
 
-  async function createDocument(doc: DocumentInterface) {
+  async function createRequest(request: RequestInterface) {
     try {
-      await Request.create(doc);
-      await $router.push({ path: 'documents' });
+      await Request.create(request);
+      await getRequestsByDocument(request.document);
+      newRequest.value.doctor = null as unknown as number;
+      newRequest.value.text = '';
     } catch (error) {
     } finally {
     }
@@ -58,11 +72,12 @@ function useRequest() {
     requestList,
     requestedDoc,
     getRequests,
+    getRequestsByDocument,
     changeRequestState,
-    getOneDocument,
-    createDocument,
+    createRequest,
     deleteDocument,
     requestStateOptions,
+    newRequest,
   };
 }
 

@@ -1,9 +1,12 @@
-import { DocumentInterface } from './Document';
-
-export interface CommentInterface {
-  id?: number;
+export interface CommentDto {
   title: string;
   text: string;
-  document: number | DocumentInterface;
-  author: number;
+  document: number;
+}
+
+export interface CommentInterface {
+  author: string;
+  title: string;
+  text: string;
+  document: Document
 }

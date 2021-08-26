@@ -21,4 +21,9 @@ export default class User {
   static getDoctors() {
     return Api().get('users/doctors/all')
   }
+
+  static getActivity() {
+    return Api().get('activity')
+  }
+
 }

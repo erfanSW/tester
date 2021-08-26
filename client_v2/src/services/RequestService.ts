@@ -1,13 +1,17 @@
 import Api from './Api';
-import { DocumentInterface } from 'src/interfaces/Document';
+import { RequestInterface } from 'src/interfaces/Request';
 
 export default class Docs {
-  static create(doc: DocumentInterface) {
-    return Api().post('documents', doc);
+  static create(request: RequestInterface) {
+    return Api().post('requests', request);
   }
 
   static getAll() {
     return Api().get('requests');
+  }
+
+  static getByDoc(docId: number) {
+    return Api().get(`requests/document/${docId}`);
   }
 
   static updateState(id: number, state: number) {
