@@ -11,4 +11,5 @@ export enum RequestState {
   UNKNOWN = 0,
   REJECTED = 1,
   ACCEPTED = 2,
+  ACCEPTED_BY_OTHERS = 3,
 }

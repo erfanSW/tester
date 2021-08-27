@@ -28,9 +28,8 @@ export class DocumentController {
   @UseGuards(JwtAuthGuard)
   @Get()
   async getAll(@Request() req) {
-    const user = await this.usersService.findOne({ id: req.user.userId });
-    if (user) return await this.documentService.getByUser(user.id);
-    else return [];
+    const userId = req.user.userId;
+    return await this.documentService.getByUser(userId);
   }
 
   @UseGuards(JwtAuthGuard)

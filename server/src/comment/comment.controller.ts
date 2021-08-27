@@ -11,14 +11,19 @@ import {
   UseGuards,
   Delete,
   Patch,
+  Request
 } from '@nestjs/common';
 import { CommentService } from './comment.service';
 import { CommentDto } from './dto/comment.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { ActivityService } from 'src/activity/activity.service';
 
 @Controller('comments')
 export class CommentController {
-  constructor(private readonly commentService: CommentService) {}
+  constructor(
+    private readonly commentService: CommentService,
+    private readonly activityService: ActivityService,
+  ) {}
 
   @Get()
   async getAll() {
@@ -37,8 +42,9 @@ export class CommentController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  async create(@Body() document: CommentDto) {
-    return await this.commentService.createOne(document);
+  async create(@Body() comment: CommentDto, @Request() req) {
+    comment.author = req.user.userId;
+    return await this.commentService.createOne(comment);
   }
 
   @UseGuards(JwtAuthGuard)

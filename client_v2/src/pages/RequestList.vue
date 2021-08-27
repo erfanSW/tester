@@ -54,24 +54,26 @@
           flat
           dense
         />
-        <q-btn
-          v-if="request.state !== 2"
-          icon="check_circle_outline"
-          color="positive"
-          @click="changeRequestState(request.id, 2)"
-          class="q-mx-sm"
-          flat
-          dense
-        />
-        <q-btn
-          v-if="request.state !== 1"
-          icon="highlight_off"
-          color="red"
-          @click="changeRequestState(request.id, 1)"
-          class="q-mx-sm"
-          flat
-          dense
-        />
+        <div v-if="request.state === 0 && request.doctor">
+          <q-btn
+            v-if="request.state !== 2 && request.doctor.id === user.id"
+            icon="check_circle_outline"
+            color="positive"
+            @click="changeRequestState(request.id, 2)"
+            class="q-mx-sm"
+            flat
+            dense
+          />
+          <q-btn
+            v-if="request.state !== 1 && request.doctor.id === user.id"
+            icon="highlight_off"
+            color="red"
+            @click="changeRequestState(request.id, 1)"
+            class="q-mx-sm"
+            flat
+            dense
+          />
+        </div>
       </div>
       <div class="col-12">
         <q-expansion-item
@@ -108,10 +110,16 @@ import { defineComponent, onMounted } from 'vue';
 import { useRequest } from '../hooks/useRequest';
 import { usePdate } from '../hooks/usePdate';
 import { DocumentData } from '../interfaces/Document';
+import { useQuasar } from 'quasar';
+import { UserDto } from '../interfaces/User';
 
 export default defineComponent({
   name: 'PageIndex',
   setup() {
+    const $q = useQuasar();
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+    const user = $q.cookies.get('user') as UserDto;
+
     const {
       requestList,
       getRequests,
@@ -161,6 +169,7 @@ export default defineComponent({
       deleteDocument,
       changeRequestState,
       requestStateOptions,
+      user
     };
   },
 });

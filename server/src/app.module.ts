@@ -10,9 +10,9 @@ import { DocumentModule } from './document/document.module';
 import { CommentModule } from './comment/comment.module';
 import { ConfigModule } from '@nestjs/config';
 import * as fsStore from 'cache-manager-fs-hash';
-import { MongooseModule } from '@nestjs/mongoose';
 import { RequestsModule } from './requests/requests.module';
-
+import { ActivityModule } from './activity/activity.module';
+import { PostModule } from './post/post.module';
 
 @Module({
   imports: [
@@ -35,6 +35,8 @@ import { RequestsModule } from './requests/requests.module';
     DocumentModule,
     CommentModule,
     RequestsModule,
+    ActivityModule,
+    PostModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { Users } from './users.entity';
 import { UserInterface } from './interface/users.interface';
 import { RoleType } from 'src/roles/interface/roles.interface';
+import { UserDto } from './dto/users.dto';
 
 @Injectable()
 export class UsersService {
@@ -24,7 +25,7 @@ export class UsersService {
     });
   }
 
-  async createOne(user: UserInterface): Promise<Users> {
+  async createOne(user: UserDto): Promise<Users> {
     return await this.userRepository.save(user);
   }
 

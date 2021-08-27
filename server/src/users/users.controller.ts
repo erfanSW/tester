@@ -11,6 +11,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RoleGuard } from '../guards/RoleGuard';
 import { UsersService } from './users.service';
 import { UserDto } from './dto/users.dto';
+import { UserInterface } from './interface/users.interface';
 
 @Controller('users')
 export class UsersController {
@@ -37,7 +38,7 @@ export class UsersController {
   }
 
   @Put()
-  async update(@Body() user: UserDto) {
+  async update(@Body() user: UserInterface) {
     return await this.userService.updateOne(user);
   }
 }

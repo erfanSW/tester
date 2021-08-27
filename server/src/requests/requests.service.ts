@@ -1,7 +1,7 @@
 import { Injectable, Req } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, getManager } from 'typeorm';
-import { RequestInterface } from './interface/requests.interface';
+import { RequestInterface, RequestState } from './interface/requests.interface';
 import { Request } from './requests.entity';
 import { Document } from '../document/document.entity';
 
@@ -17,6 +17,16 @@ export class RequestsService {
   findById(id: number) {
     return this.requestRepository.find({
       where: [{ doctor: id }, { applicant: id }],
+      order: { updated_at: 'DESC' },
+    });
+  }
+
+  findByUserIdAndDocId(id: number, docId: number) {
+    return this.requestRepository.find({
+      where: [
+        { doctor: id, document: docId },
+        { applicant: id, document: docId },
+      ],
     });
   }
 
@@ -39,6 +49,10 @@ export class RequestsService {
         const result = await transactionalEntityManager.query(
           `update document set "doctorId"=${_userId} where id=${request.document};`,
         );
+        if (state === RequestState.ACCEPTED)
+          await transactionalEntityManager.query(
+            `update "request" set state=${RequestState.ACCEPTED_BY_OTHERS} where "documentId"=${request.document} AND state=${RequestState.UNKNOWN}`,
+          );
         return result[1];
       });
   }

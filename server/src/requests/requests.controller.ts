@@ -6,6 +6,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -28,6 +29,18 @@ export class RequestsController {
   @Get()
   async getAll(@Req() req) {
     return await this.requestsService.findById(req.user.userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('document/:document')
+  async getByDoc(
+    @Req() req,
+    @Param('document', ParseIntPipe) documentId: number,
+  ) {
+    return await this.requestsService.findByUserIdAndDocId(
+      req.user.userId,
+      documentId,
+    );
   }
 
   @UseGuards(JwtAuthGuard)

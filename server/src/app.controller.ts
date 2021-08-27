@@ -15,6 +15,8 @@ import { UsersService } from './users/users.service';
 import { UserDto } from './users/dto/users.dto';
 import { totp } from 'otplib';
 import { Cache } from 'cache-manager';
+import { ActivityService } from './activity/activity.service';
+import { ActivityType } from './activity/interface/activity.interface';
 
 @Controller()
 export class AppController {
@@ -23,6 +25,7 @@ export class AppController {
     private readonly userService: UsersService,
     private readonly authService: AuthService,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
+    private readonly activityService: ActivityService,
   ) {}
 
   @Post('auth/register')
@@ -76,9 +79,19 @@ export class AppController {
       if (req.headers.type == 'signup') {
         const { token, ...new_user } = existed_user;
         const exisiting_user = await this.userService.findOne(new_user);
+
         if (!exisiting_user) {
           const result = await this.userService.createOne(new_user);
-        console.log(10);
+          this.activityService.createOne({
+            text: 'کاربر ثبت نام  کرد',
+            type: ActivityType.AUTHENTICATION,
+            user: result.id,
+          });
+          this.activityService.createOne({
+            text: 'کاربر وارد شد',
+            type: ActivityType.AUTHENTICATION,
+            user: result.id,
+          });
           await this.cacheManager.del(user.phone);
           return this.authService.login(result);
         } else {
@@ -87,6 +100,11 @@ export class AppController {
       } else if (req.headers.type == 'login') {
         const exisiting_user = await this.userService.findOne({
           phone: user.phone,
+        });
+        this.activityService.createOne({
+          text: 'کاربر وارد شد  کرد',
+          type: ActivityType.AUTHENTICATION,
+          user: exisiting_user.id,
         });
         await this.cacheManager.del(user.phone);
         return this.authService.login(exisiting_user);

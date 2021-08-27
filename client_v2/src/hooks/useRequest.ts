@@ -14,7 +14,7 @@ function useRequest() {
   });
   const $q = useQuasar();
 
-  const requestStateOptions = ['نامشخص', 'رد شده', 'پذیرفته شده'];
+  const requestStateOptions = ['نامشخص', 'رد شده', 'پذیرفته شده','پذیرفته شده توسط پزشک دیگر'];
 
   async function getRequests() {
     try {
