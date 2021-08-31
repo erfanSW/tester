@@ -4,6 +4,8 @@ import { Repository, getManager } from 'typeorm';
 import { RequestInterface, RequestState } from './interface/requests.interface';
 import { Request } from './requests.entity';
 import { Document } from '../document/document.entity';
+import { NotificationService } from 'src/notification/notification.service';
+import { NotificationType } from 'src/notification/interface/notification.interface';
 
 // @ts-ignore
 
@@ -12,6 +14,7 @@ export class RequestsService {
   constructor(
     @InjectRepository(Request)
     private requestRepository: Repository<Request>,
+    private readonly notificationService: NotificationService,
   ) {}
 
   findById(id: number) {
@@ -53,6 +56,17 @@ export class RequestsService {
           await transactionalEntityManager.query(
             `update "request" set state=${RequestState.ACCEPTED_BY_OTHERS} where "documentId"=${request.document} AND state=${RequestState.UNKNOWN}`,
           );
+        if (state === RequestState.ACCEPTED || state === RequestState.REJECTED)
+          await this.notificationService.createOne({
+            receptor: request.applicant,
+            sender: request.doctor,
+            type: NotificationType.REQUEST,
+            notificationElementId: request.id,
+            text:
+              state === RequestState.ACCEPTED
+                ? 'درخواست شما را پذیرفت'
+                : 'درخواست شما را رد کرد',
+          });
         return result[1];
       });
   }

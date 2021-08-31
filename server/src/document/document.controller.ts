@@ -11,6 +11,7 @@ import {
   HttpException,
   HttpStatus,
   UseGuards,
+  Patch,
 } from '@nestjs/common';
 import { DocumentService } from './document.service';
 import { DocumentDto } from './dto/document.dto';
@@ -55,6 +56,15 @@ export class DocumentController {
     }
 
     return await this.documentService.createOne(document);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch(':id/:tagid')
+  async updateTag(
+    @Param('id', ParseIntPipe) id: number,
+    @Param('tagid', ParseIntPipe) tagId: number,
+  ) {
+    return await this.documentService.updateTag(id, tagId);
   }
 
   @UseGuards(JwtAuthGuard)

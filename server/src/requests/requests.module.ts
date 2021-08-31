@@ -7,6 +7,7 @@ import { UserModule } from 'src/users/users.module';
 import { DocumentModule } from 'src/document/document.module';
 import { RequestSubscriber } from './request.subscriber';
 import { ActivityModule } from 'src/activity/activity.module';
+import { NotificationModule } from 'src/notification/notification.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { ActivityModule } from 'src/activity/activity.module';
     UserModule,
     DocumentModule,
     ActivityModule,
+    NotificationModule
   ],
   providers: [RequestsService, RequestSubscriber],
   controllers: [RequestsController],

@@ -1,14 +1,23 @@
 import { ref } from 'vue';
 import User from '../services/UserService';
-import { UserInterface, OtpType, OtpResponse } from '../interfaces/User';
+import {
+  UserInterface,
+  OtpType,
+  OtpResponse,
+  UserUpdateInterface,
+  UserOtpDto,
+} from '../interfaces/User';
 import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
 import { AxiosError } from 'axios';
+import { useUser } from './useUser';
 
 function useMembership() {
   const $q = useQuasar();
   const $router = useRouter();
   const doctors = ref<UserInterface[]>([]);
+  const myProfile = ref<User>();
+  const updateProfileLoading = ref<boolean>(false);
 
   async function register(user: UserInterface) {
     try {
@@ -19,7 +28,7 @@ function useMembership() {
         color: 'positive',
         timeout: 10000,
       });
-      $q.cookies.set('phone', user.phone as string, {
+      $q.cookies.set('phone', user.phone, {
         secure: true,
       });
       await $router.push({
@@ -33,6 +42,9 @@ function useMembership() {
       if (err.response?.status == 404) {
         await $router.push({
           path: '/signup',
+          query: {
+            phone: user.phone,
+          },
         });
       }
     }
@@ -67,7 +79,7 @@ function useMembership() {
 
   async function validateOtp(type: string, otp: string) {
     try {
-      const user: UserInterface = {
+      const user: UserOtpDto = {
         phone: $q.cookies.get('phone'),
         password: otp,
       };
@@ -115,6 +127,22 @@ function useMembership() {
     }
   }
 
+  async function logout() {
+    $q.cookies.remove('user');
+    $q.cookies.remove('access_token');
+    await $router.push({
+      path: '/login',
+    });
+  }
+
+  function isLoggedIn(): boolean {
+    if ($q.cookies.get('access_token')) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   async function getDoctors() {
     try {
       const result = await User.getDoctors();
@@ -122,7 +150,45 @@ function useMembership() {
     } catch (error) {}
   }
 
-  return { register, signup, validateOtp, getDoctors, doctors };
+  async function getUserProfile(id: number) {
+    try {
+      const result = await User.getUser(id);
+      return result.data as UserInterface;
+    } catch (error) {}
+  }
+
+  async function getMyProfile() {
+    try {
+      const { user } = useUser();
+      const result = await User.getUser(user.id);
+      myProfile.value = result.data as User;
+    } catch (error) {}
+  }
+
+  async function updateProfile(user: UserUpdateInterface) {
+    try {
+      updateProfileLoading.value = true;
+      await User.updateUser(user);
+    } catch (error) {
+    } finally {
+      updateProfileLoading.value = false;
+    }
+  }
+
+  return {
+    register,
+    signup,
+    validateOtp,
+    getDoctors,
+    doctors,
+    getUserProfile,
+    getMyProfile,
+    myProfile,
+    updateProfile,
+    updateProfileLoading,
+    logout,
+    isLoggedIn,
+  };
 }
 
 export { useMembership };

@@ -6,7 +6,8 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Users } from '../users/users.entity';
+import { Users } from 'src/users/users.entity';
+import { Tag } from 'src/tag/tag.entity';
 
 @Entity()
 export class Document {
@@ -30,6 +31,12 @@ export class Document {
     eager: true,
   })
   patient: number;
+
+  @ManyToOne(type => Tag, {
+    onDelete: 'SET NULL',
+    eager: true,
+  })
+  tag: number;
 
   @Column({ default: false })
   archived: boolean;

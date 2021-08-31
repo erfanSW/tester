@@ -1,8 +1,8 @@
 import Api from './Api';
-import { DocumentInterface } from 'src/interfaces/Document';
+import { DocumentDto } from 'src/interfaces/User';
 
 export default class Docs {
-  static create(doc: DocumentInterface) {
+  static create(doc: DocumentDto) {
     return Api().post('documents', doc);
   }
 
@@ -16,5 +16,9 @@ export default class Docs {
 
   static deleteOne(id: number) {
     return Api().delete(`documents/${id}`);
+  }
+
+  static updateTag(id: number, tagId: number) {
+    return Api().patch(`documents/${id}/${tagId}`);
   }
 }

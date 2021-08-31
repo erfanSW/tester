@@ -1,16 +1,21 @@
 <template>
   <div class="row justify-center items-center">
-    <q-input
-      outlined
-      autofocus
-      v-model="otpModel"
-      dir="ltr"
-      mask=" #  #  #  #  #  # "
-      color="grey-8"
-      style="width: 120px;"
-    />
-    <div class="col-12 q-mt-xl q-pa-sm login-card">
-      <q-img class="q-mt-xl" src="../assets/doctor.svg" />
+    <div class="q-mt-xl q-pa-sm login-card">
+      <q-toolbar class="bg-grey-1 text-indigo q-mb-lg">
+        <div>ورود کد دومرحله ای</div>
+      </q-toolbar>
+      <div class="col-12 q-mt-md q-pa-sm">
+        <q-img src="../assets/medicine.svg" />
+      </div>
+      <q-input
+        outlined
+        autofocus
+        class="q-mt-md"
+        v-model="otpModel"
+        dir="ltr"
+        mask=" #  #  #  #  #  # "
+        color="indigo"
+      />
     </div>
   </div>
 </template>
@@ -55,7 +60,7 @@ export default defineComponent({
 
 <style scoped>
 .login-card {
-  width: 300px;
-  height: 400px;
+  width: 400px;
+  height: 500px;
 }
 </style>

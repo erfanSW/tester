@@ -63,7 +63,21 @@
               <q-icon
                 flat
                 name="bar_chart"
-                :color="$route.path == '/activity_chart' ? 'indigo-6' : 'indigo-2'"
+                :color="
+                  $route.path == '/activity_chart' ? 'indigo-6' : 'indigo-2'
+                "
+                size="25px"
+              />
+            </q-item-section>
+          </q-item>
+        </router-link>
+        <router-link class="router-link" to="/profile">
+          <q-item>
+            <q-item-section avatar>
+              <q-icon
+                flat
+                name="iconly:boldProfile"
+                :color="$route.path == '/profile' ? 'indigo-6' : 'indigo-2'"
                 size="25px"
               />
             </q-item-section>
@@ -74,7 +88,7 @@
 
     <q-page-container class="row bg-grey-3">
       <div class="custom-main-container col-12 q-pa-xl">
-        <CustomToolbar />
+        <CustomToolbar @toggle-menu="drawer = !drawer" />
         <router-view class="q-mt-lg bg-white rounded-borders q-pa-md" />
       </div>
     </q-page-container>
@@ -85,6 +99,9 @@
 import { defineComponent, ref, onMounted } from 'vue';
 import CustomToolbar from '../components/Layout/CustomToolbar.vue';
 import { useIconly } from '../hooks/useIconly';
+import UserService from '../services/UserService';
+import { useMembership } from '../hooks/useMembership';
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
   name: 'MainLayout',
@@ -97,7 +114,17 @@ export default defineComponent({
     const drawer = ref<boolean>(false);
     const miniState = ref<boolean>(true);
 
+    const { isLoggedIn } = useMembership();
+
+    onMounted(async () => {
+      if (!isLoggedIn()) {
+        await useRouter().push({ path: '/login' });
+      }
+    });
+
     onMounted(useIconly);
+
+    onMounted(async () => await UserService.getNotification());
 
     return { drawer, miniState };
   },

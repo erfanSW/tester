@@ -16,7 +16,10 @@ export class CommentService {
   }
 
   findByDocument(id: number) {
-    return this.commentRepository.find({ where: { document: id } });
+    return this.commentRepository.find({
+      where: { document: id },
+      order: { created_at: 'DESC' },
+    });
   }
 
   getAll() {

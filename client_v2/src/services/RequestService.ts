@@ -1,8 +1,8 @@
 import Api from './Api';
-import { RequestInterface } from 'src/interfaces/Request';
+import { RequestDto } from 'src/interfaces/User';
 
 export default class Docs {
-  static create(request: RequestInterface) {
+  static create(request: RequestDto) {
     return Api().post('requests', request);
   }
 

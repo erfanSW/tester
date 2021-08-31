@@ -13,6 +13,7 @@ import * as fsStore from 'cache-manager-fs-hash';
 import { RequestsModule } from './requests/requests.module';
 import { ActivityModule } from './activity/activity.module';
 import { PostModule } from './post/post.module';
+import { TagModule } from './tag/tag.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { PostModule } from './post/post.module';
     RequestsModule,
     ActivityModule,
     PostModule,
+    TagModule,
   ],
   controllers: [AppController],
   providers: [AppService],

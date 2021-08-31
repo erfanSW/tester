@@ -1,25 +1,31 @@
 <template>
   <div padding class="row justify-center items-center">
-    <div class="q-mt-lg q-pa-sm login-card ltr">
-      <q-input
-        outlined
-        stack-label
-        prefix="+98"
-        mask=" ### - ### - ####"
-        :hint="hintMessage"
-        v-model="phone"
-      />
+    <div class="q-mt-lg q-pa-sm login-card">
+      <q-toolbar class="bg-grey-1 text-indigo q-mb-lg">
+        <div>ورود به سیستم</div>
+      </q-toolbar>
+      <q-img class="q-mt-md" src="../assets/medicine.svg" />
+      <div class="ltr">
+        <q-input
+          outlined
+          stack-label
+          class="q-mt-lg"
+          color="indigo"
+          prefix="+98"
+          mask=" ### - ### - ####"
+          :hint="hintMessage"
+          v-model="phone"
+        />
+      </div>
       <transition name="fade">
         <q-btn
           v-if="isPhoneNumberEntered"
           label="ورود"
-          class="full-width q-mt-md shake"
-          color="blue"
-          outline
+          class="full-width q-mt-md shake bg-indigo text-white"
+          flat
           @click="register({ phone: formattedPhone })"
         />
       </transition>
-      <q-img class="q-mt-md" src="../assets/medicine.svg" />
     </div>
   </div>
 </template>

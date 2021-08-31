@@ -31,10 +31,11 @@ export class DocumentSubscriber implements EntitySubscriberInterface<Document> {
   }
 
   afterUpdate(event: RemoveEvent<Document>) {
-    this.activityService.createOne({
-      text: `یک آزمایش را به روز کرد : ${event.entity.name}`,
-      type: ActivityType.DOCUMENT,
-      user: event.entity.patient,
-    });
+    if (event.entity)
+      this.activityService.createOne({
+        text: `یک آزمایش را به روز کرد : ${event.entity.name}`,
+        type: ActivityType.DOCUMENT,
+        user: event.entity.patient,
+      });
   }
 }

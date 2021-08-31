@@ -1,20 +1,25 @@
 import { ref } from 'vue';
-import { DocumentData } from 'src/interfaces/Document';
-import { RequestInterface } from 'src/interfaces/Request';
+import { DocumentData, RequestDto } from 'src/interfaces/User';
+import { RequestInterface } from 'src/interfaces/User';
 import Request from '../services/RequestService';
 import { useQuasar } from 'quasar';
 
 function useRequest() {
   const requestList = ref<DocumentData[]>([]);
-  const requestedDoc = ref<DocumentData[]>([]);
-  const newRequest = ref<RequestInterface>({
-    text: '',
+  const requestedDoc = ref<RequestInterface[]>([]);
+  const newRequest = ref<RequestDto>({
     doctor: null as unknown as number,
     document: null as unknown as number,
+    text: '',
   });
   const $q = useQuasar();
 
-  const requestStateOptions = ['نامشخص', 'رد شده', 'پذیرفته شده','پذیرفته شده توسط پزشک دیگر'];
+  const requestStateOptions = [
+    'نامشخص',
+    'رد شده',
+    'پذیرفته شده',
+    'پذیرفته شده توسط پزشک دیگر',
+  ];
 
   async function getRequests() {
     try {
@@ -50,7 +55,7 @@ function useRequest() {
     } catch (error) {}
   }
 
-  async function createRequest(request: RequestInterface) {
+  async function createRequest(request: RequestDto) {
     try {
       await Request.create(request);
       await getRequestsByDocument(request.document);

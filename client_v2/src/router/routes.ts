@@ -14,6 +14,10 @@ const routes: RouteRecordRaw[] = [
         path: 'activity_chart',
         component: () => import('pages/ActivityChart.vue'),
       },
+      {
+        path: 'profile',
+        component: () => import('pages/Profile.vue'),
+      },
     ],
   },
   {

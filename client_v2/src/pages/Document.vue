@@ -1,5 +1,5 @@
 <template>
-  <q-page padding class="q-px-xl q-py-sm rounded-borders shadow-24">
+  <q-page padding class="q-px-xl q-py-sm rounded-borders shadow-24" v-if="requestedDoc">
     <div class="text-h6 q-pa-md">
       {{ requestedDoc.name }}
     </div>
@@ -50,7 +50,34 @@
             </q-item>
           </q-list>
         </div>
-        <div class="request-list q-mt-md">
+        <div class="q-mt-lg" v-if="user.id == requestedDoc.patient.id">
+          <q-select
+            v-model="requestedDoc.tag"
+            :options="tagList"
+            class="q-mt-sm q-pa-sm"
+            label="حوزه آزمایش"
+            option-label="name"
+            option-value="id"
+            map-options
+            emit-value
+            dense
+            outlined
+          />
+          <div class="q-pa-sm" dir="ltr">
+            <q-btn
+              @click="updateTag(requestedDoc.id, requestedDoc.tag)"
+              :loading="updateTagLoading"
+              class="bg-indigo-6 text-white"
+              label="تغییر موضوع"
+              flat
+            >
+              <template v-slot:loading>
+                <q-spinner-orbit color="white" />
+              </template>
+            </q-btn>
+          </div>
+        </div>
+        <div class="request-list q-mt-md" v-if="user.id == requestedDoc.patient.id">
           <label>درخواست ها</label>
           <div
             class="request-card doc-box bg-white q-mt-md q-pa-sm"
@@ -120,7 +147,7 @@
             </q-list>
           </div>
         </div>
-        <div class="q-mt-md">
+        <div class="q-mt-md" v-if="user.id == requestedDoc.patient.id">
           <q-select
             v-model="newRequest.doctor"
             :options="doctors"
@@ -132,7 +159,18 @@
             emit-value
             borderless
             dense
-          />
+          >
+            <template v-slot:option="scope">
+              <q-item v-bind="scope.itemProps">
+                <q-item-section>
+                  <q-item-label v-html="scope.opt.fullname" />
+                  <q-item-label caption>{{
+                    scope.opt.tag ? scope.opt.tag.name : 'تخصص نا مشخص'
+                  }}</q-item-label>
+                </q-item-section>
+              </q-item>
+            </template>
+          </q-select>
           <q-input
             v-model="newRequest.text"
             class="q-pa-sm"
@@ -167,7 +205,7 @@
             </q-tr>
           </template>
         </q-table>
-        <div class="q-mt-xl row justify-center" v-if="1">
+        <div class="q-mt-xl row justify-center">
           <q-timeline color="indigo-6" layout="loose">
             <q-timeline-entry
               v-for="comment in userComments"
@@ -286,20 +324,19 @@ import { defineComponent, onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { useDocument } from '../hooks/useDocument';
 import { usePdate } from '../hooks/usePdate';
-import { DocumentData } from '../interfaces/Document';
+import { DocumentData } from '../interfaces/User';
 import { useComment } from '../hooks/useComments';
 import { useMembership } from '../hooks/useMembership';
 import { useRequest } from '../hooks/useRequest';
-import { useQuasar } from 'quasar';
-import { UserDto } from '../interfaces/User';
+import { useTag } from '../hooks/useTag';
+import { useUser } from '../hooks/useUser';
 
 export default defineComponent({
   name: 'PageIndex',
   setup() {
     const $route = useRoute();
-    const $q = useQuasar();
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-    const user = $q.cookies.get('user') as UserDto;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const { user } = useUser();
     const userComments = computed(function () {
       return comments.value.length === 0
         ? []
@@ -310,7 +347,13 @@ export default defineComponent({
         ? []
         : comments.value.filter((comment) => comment.author.id != user.id);
     });
-    const { getOneDocument, deleteDocument, requestedDoc } = useDocument();
+    const {
+      getOneDocument,
+      deleteDocument,
+      requestedDoc,
+      updateTag,
+      updateTagLoading,
+    } = useDocument();
     const {
       getCommentsByDocument,
       createComment,
@@ -371,6 +414,9 @@ export default defineComponent({
       );
     };
 
+    const { tagList, getTags } = useTag();
+    onMounted(() => getTags());
+
     return {
       formattedPersianDate,
       formattedPersianTime,
@@ -393,6 +439,9 @@ export default defineComponent({
       user,
       userComments,
       othersComment,
+      tagList,
+      updateTag,
+      updateTagLoading,
     };
   },
 });

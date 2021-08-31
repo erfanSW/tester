@@ -23,6 +23,20 @@
           >
           </q-file>
         </div>
+        <div class="col-12 q-pa-sm">
+          <label>حوزه آزمایش</label>
+          <q-select
+            v-model="tag"
+            :options="tagList"
+            class="q-mt-sm"
+            option-label="name"
+            option-value="id"
+            map-options
+            emit-value
+            dense
+            outlined
+          />
+        </div>
       </div>
       <q-markup-table class="q-mt-xl q-mx-sm" flat bordered>
         <thead>
@@ -104,7 +118,7 @@
         <q-btn
           label="ثبت نهایی"
           class="bg-indigo-6 text-white q-ma-sm q-mt-lg"
-          @click="createDocument({ name, data: documentData })"
+          @click="createDocument({ name, data: documentData, tag })"
           flat
         />
         <q-btn
@@ -125,13 +139,15 @@ import { defineComponent, ref, onMounted, watch, computed } from 'vue';
 import { LoadingBar, Notify } from 'quasar';
 import { useDocument } from '../hooks/useDocument';
 import { useTesseract } from '../hooks/useTesseract';
-import { DocumentData } from '../interfaces/Document';
+import { useTag } from '../hooks/useTag';
+import { DocumentData } from '../interfaces/User';
 
 export default defineComponent({
   name: 'PageIndex',
   components: {},
   setup() {
     const name = ref<string>('');
+    const tag = ref<number>();
     const key_input = ref<string>('');
     const value_input = ref<string>('');
     const form_fields = ref<string[][]>([]);
@@ -242,6 +258,9 @@ export default defineComponent({
 
     const { createDocument } = useDocument();
 
+    const { tagList, getTags } = useTag();
+    onMounted(() => getTags());
+
     return {
       name,
       image,
@@ -258,6 +277,8 @@ export default defineComponent({
       clear_all,
       createDocument,
       documentData,
+      tagList,
+      tag
     };
   },
 });

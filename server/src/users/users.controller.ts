@@ -6,9 +6,11 @@ import {
   Post,
   Put,
   UseGuards,
+  Request,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { RoleGuard } from '../guards/RoleGuard';
 import { UsersService } from './users.service';
 import { UserDto } from './dto/users.dto';
 import { UserInterface } from './interface/users.interface';
@@ -37,8 +39,15 @@ export class UsersController {
     return await this.userService.createOne(user);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Put()
-  async update(@Body() user: UserInterface) {
+  async update(@Body() user: UserInterface, @Request() req) {
+    if (user.id !== req.user.userId) {
+      throw new HttpException(
+        'شما به این کار دسترسی ندارید',
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
     return await this.userService.updateOne(user);
   }
 }

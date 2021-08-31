@@ -5,9 +5,16 @@ import { Comment } from './comment.entity';
 import { CommentController } from './comment.controller';
 import { ActivityModule } from 'src/activity/activity.module';
 import { CommentSubscriber } from './comment.subscriber';
+import { DocumentModule } from 'src/document/document.module';
+import { NotificationModule } from 'src/notification/notification.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Comment]), ActivityModule],
+  imports: [
+    TypeOrmModule.forFeature([Comment]),
+    ActivityModule,
+    DocumentModule,
+    NotificationModule
+  ],
   controllers: [CommentController],
   providers: [CommentService, CommentSubscriber],
 })

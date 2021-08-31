@@ -1,5 +1,5 @@
 import Api from './Api';
-import { CommentDto } from 'src/interfaces/Comment';
+import { CommentDto } from 'src/interfaces/User';
 
 export default class Comment {
   static create(comment: CommentDto) {

@@ -39,6 +39,16 @@
           />
           {{ formattedPersianTime(request.created_at) }}
         </div>
+        <div class="q-mx-md q-pa-sm" v-if="request.document.tag && user.tag">
+          <q-icon name="hdr_strong" />
+        </div>
+        <div class="q-pa-sm" v-if="request.document.tag && user.tag">
+          <q-badge
+            v-if="request.document.tag.id !== user.tag.id"
+            label="نامرتبط"
+            class="bg-red-1 text-redq-pa-sm"
+          />
+        </div>
       </div>
       <q-space />
       <div class="card-document-action">
@@ -109,7 +119,7 @@
 import { defineComponent, onMounted } from 'vue';
 import { useRequest } from '../hooks/useRequest';
 import { usePdate } from '../hooks/usePdate';
-import { DocumentData } from '../interfaces/Document';
+import { DocumentData } from '../interfaces/User';
 import { useQuasar } from 'quasar';
 import { UserDto } from '../interfaces/User';
 
@@ -169,7 +179,7 @@ export default defineComponent({
       deleteDocument,
       changeRequestState,
       requestStateOptions,
-      user
+      user,
     };
   },
 });

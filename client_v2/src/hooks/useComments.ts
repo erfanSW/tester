@@ -1,5 +1,5 @@
 import { ref } from 'vue';
-import { CommentDto } from 'src/interfaces/Comment';
+import { CommentDto } from 'src/interfaces/User';
 import { CommentInterface } from 'src/interfaces/User';
 import Comment from '../services/CommentService';
 

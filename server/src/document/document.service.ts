@@ -24,6 +24,13 @@ export class DocumentService {
     });
   }
 
+  findById(id: number) {
+    return this.documentRepository.findOne({
+      where: { id },
+      loadRelationIds: true
+    });
+  }
+
   getAll() {
     return this.documentRepository.find();
   }
@@ -47,5 +54,10 @@ export class DocumentService {
   updateOne(role: DocumentInterface) {
     const { id, ...rest } = role;
     return this.documentRepository.update(id, { ...rest });
+  }
+
+  updateTag(id: number, tagId: number) {
+    console.log(id, tagId);
+    return this.documentRepository.update(id, { tag: tagId });
   }
 }
