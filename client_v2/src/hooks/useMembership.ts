@@ -16,7 +16,8 @@ function useMembership() {
   const $q = useQuasar();
   const $router = useRouter();
   const doctors = ref<UserInterface[]>([]);
-  const myProfile = ref<User>();
+  const myProfile = ref<UserInterface>();
+  const userProfile = ref<UserInterface>();
   const updateProfileLoading = ref<boolean>(false);
 
   async function register(user: UserInterface) {
@@ -153,7 +154,7 @@ function useMembership() {
   async function getUserProfile(id: number) {
     try {
       const result = await User.getUser(id);
-      return result.data as UserInterface;
+      userProfile.value = result.data as UserInterface;
     } catch (error) {}
   }
 
@@ -161,7 +162,7 @@ function useMembership() {
     try {
       const { user } = useUser();
       const result = await User.getUser(user.id);
-      myProfile.value = result.data as User;
+      myProfile.value = result.data as UserInterface;
     } catch (error) {}
   }
 
@@ -184,6 +185,7 @@ function useMembership() {
     getUserProfile,
     getMyProfile,
     myProfile,
+    userProfile,
     updateProfile,
     updateProfileLoading,
     logout,

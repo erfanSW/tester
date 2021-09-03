@@ -1,51 +1,80 @@
 <template>
+  <div>
     <q-page padding>
       <div class="row justify-center">
         <q-img src="../assets/profile.svg" width="200px" height="200px" />
       </div>
-      <div v-if="userProfile" class="row q-mt-lg">
+      <div v-if="myProfile" class="row q-mt-lg">
         <div class="col-6 q-pa-sm">
           <label>نام و نام خانوادگی</label>
+          <q-input v-model="myProfile.fullname" class="q-mt-sm" dense filled />
+        </div>
+        <div class="col-6 q-pa-sm">
+          <label>شماره تلفن</label>
           <q-field class="q-mt-sm" readonly outlined dense>
             <template v-slot:control>
               <div class="self-center full-width no-outline" tabindex="0">
-                {{ userProfile.fullname }}
+                {{ myProfile.phone }}
               </div>
             </template>
           </q-field>
         </div>
-        <div class="col-6 q-pa-sm">
+        <div class="col-6 q-pa-sm q-mt-md">
           <label>تاریخ عضویت</label>
           <q-field class="q-mt-sm" readonly outlined dense>
             <template v-slot:control>
               <div class="self-center full-width no-outline" tabindex="0">
-                {{ formattedPersianDateTime(userProfile.created_at) }}
+                {{ formattedPersianDateTime(myProfile.created_at) }}
               </div>
             </template>
           </q-field>
         </div>
-        <div v-if="userProfile.role" class="col-6 q-pa-sm q-mt-md">
+        <div v-if="myProfile.role" class="col-6 q-pa-sm q-mt-md">
           <label>نوع کاربر</label>
           <q-field class="q-mt-sm" readonly outlined dense>
             <template v-slot:control>
               <div class="self-center full-width no-outline" tabindex="0">
-                {{ userProfile.role.name }}
+                {{ myProfile.role.name }}
               </div>
             </template>
           </q-field>
         </div>
-        <div v-if="userProfile.tag" class="col-6 q-pa-sm q-mt-md">
+        <div class="col-12 q-pa-sm q-mt-md" v-if="myProfile.role.id === 2">
           <label>تخصص</label>
-          <q-field class="q-mt-sm" readonly outlined dense>
-            <template v-slot:control>
-              <div class="self-center full-width no-outline" tabindex="0">
-                {{ userProfile.tag.name }}
-              </div>
+          <q-select
+            v-model="myProfile.tag"
+            :options="tagList"
+            class="q-mt-sm"
+            option-label="name"
+            option-value="id"
+            map-options
+            emit-value
+            dense
+            filled
+          />
+        </div>
+        <div class="col-12 q-pa-sm q-mt-lg" dir="ltr">
+          <q-btn
+            @click="
+              updateProfile({
+                id: myProfile.id,
+                fullname: myProfile.fullname,
+                tag: myProfile.tag,
+              })
+            "
+            :loading="updateProfileLoading"
+            class="bg-indigo text-white"
+            label="ذخیره اطلاعات"
+            flat
+          >
+            <template v-slot:loading>
+              <q-spinner-orbit color="white" />
             </template>
-          </q-field>
+          </q-btn>
         </div>
       </div>
     </q-page>
+  </div>
 </template>
 
 <script lang="ts">
@@ -53,27 +82,24 @@ import { defineComponent, onMounted } from 'vue';
 import { usePdate } from '../hooks/usePdate';
 import { useMembership } from '../hooks/useMembership';
 import { useTag } from '../hooks/useTag';
-import { useRoute } from 'vue-router';
 
 export default defineComponent({
-  name: 'Profile',
+  name: 'MyProfile',
   components: {},
   setup() {
-    const { getUserProfile, userProfile, updateProfile, updateProfileLoading } =
+    const { getMyProfile, myProfile, updateProfile, updateProfileLoading } =
       useMembership();
 
     const { formattedPersianDateTime } = usePdate();
 
     const { tagList, getTags } = useTag();
 
-    const requestUserId = useRoute().params.id as unknown as number;
-
-    onMounted(() => getUserProfile(requestUserId));
+    onMounted(() => getMyProfile());
     onMounted(() => getTags());
 
     return {
       formattedPersianDateTime,
-      userProfile,
+      myProfile,
       tagList,
       getTags,
       updateProfile,

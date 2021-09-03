@@ -1,11 +1,11 @@
 // app global css in SCSS form
 @font-face {
   font-family: IranSans;
-  src: url('../assets/fonts/IRANSansWeb(FaNum).woff')
+  src: url('../assets/fonts/IRANSansWeb(FaNum).woff');
 }
 
 * {
-  font-family: 'IranSans'
+  font-family: 'IranSans';
 }
 
 .ltr {
@@ -27,7 +27,7 @@
   z-index: 12;
   border: 4px solid rgba(0, 0, 0, 0);
   background-clip: revert;
-  transition: background-color .32s ease-in-out;
+  transition: background-color 0.32s ease-in-out;
   margin: 4px;
   height: 15px;
   width: 7px;
@@ -35,4 +35,9 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(47, 21, 118, 0.09);
+}
+
+.custom-router-link {
+  text-decoration: none;
+  color: inherit;
 }

@@ -92,19 +92,19 @@
       <div class="row q-mt-md q-mb-lg">
         <q-input
           v-model="key_input"
-          class="col-6 q-pa-sm"
+          class="col-12 col-md-6 q-pa-sm"
           outlined
           dense
           label="یک رشته را وارد کنید"
         />
         <q-input
           v-model="value_input"
-          class="col-5 q-pa-sm"
+          class="col-12 col-md-5 q-pa-sm"
           outlined
           dense
           label="یک مقدار وارد کنید"
         />
-        <div class="col-1 q-pa-sm" dir="ltr">
+        <div class="col-12 col-md-1 q-pa-sm" dir="ltr">
           <q-btn
             @click="add_field(key_input, value_input)"
             class="bg-indigo-1 text-indigo full-width q-pa-sm"

@@ -1,10 +1,8 @@
 import { ref } from 'vue';
-import {
-  DocumentInterface,
-  DocumentDto,
-} from 'src/interfaces/User';
+import { DocumentInterface, DocumentDto } from 'src/interfaces/User';
 import Docs from '../services/DocumentService';
 import { useRouter } from 'vue-router';
+import { Notify } from 'quasar';
 
 function useDocument() {
   const documents = ref<DocumentInterface[]>([]);
@@ -29,9 +27,26 @@ function useDocument() {
 
   async function createDocument(doc: DocumentDto) {
     try {
+      console.log(doc)
+      if (doc.name === '') {
+        return Notify.create({
+          message: 'لطفا عنوان آزمایش را وارد نمایید',
+          color: 'red',
+        });
+      }
+      if (doc.tag === undefined) {
+        return Notify.create({
+          message: 'لطفا موضوع آزمایش را انتخاب کنید',
+          color: 'red',
+        });
+      }
       await Docs.create(doc);
       await $router.push({ path: 'documents' });
     } catch (error) {
+      Notify.create({
+        message: error as string,
+        color: 'red',
+      });
     } finally {
     }
   }

@@ -14,12 +14,19 @@ function useRequest() {
   });
   const $q = useQuasar();
 
-  const requestStateOptions = [
-    'نامشخص',
-    'رد شده',
-    'پذیرفته شده',
-    'پذیرفته شده توسط پزشک دیگر',
-  ];
+  const requestStateOptions = {
+    0: 'نامشخص',
+    1: 'رد شده',
+    2: 'پذیرفته شده',
+    3: 'پذیرفته شده توسط پزشک دیگر',
+  };
+
+  const requestStateColors =  {
+    0: 'indigo',
+    1: 'red',
+    2: 'green',
+    3: 'indigo'
+  }
 
   async function getRequests() {
     try {
@@ -83,6 +90,7 @@ function useRequest() {
     deleteDocument,
     requestStateOptions,
     newRequest,
+    requestStateColors,
   };
 }
 

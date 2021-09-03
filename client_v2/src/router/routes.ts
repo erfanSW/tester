@@ -5,7 +5,7 @@ const routes: RouteRecordRaw[] = [
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/Index.vue') },
+      { path: '', component: () => import('pages/DocumenCreate.vue') },
       { path: 'documents', component: () => import('pages/DocumentList.vue') },
       { path: 'documents/:id', component: () => import('pages/Document.vue') },
       { path: 'requests', component: () => import('pages/RequestList.vue') },
@@ -16,6 +16,10 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: 'profile',
+        component: () => import('pages/MyProfile.vue'),
+      },
+      {
+        path: 'profile/:id',
         component: () => import('pages/Profile.vue'),
       },
     ],

@@ -10,14 +10,30 @@
           {{ request.text }}
         </div>
         <div class="q-mx-md q-pa-sm"><q-icon name="hdr_strong" /></div>
-        <div class="doc-created-at q-pa-sm">
+        <div
+          v-if="request.doctor && request.applicant"
+          class="doc-created-at q-pa-sm"
+        >
           <q-icon
             name="iconly:boldProfile"
             color="indigo-6"
             size="xs"
             class="q-mr-sm"
           />
-          {{ request.applicant.fullname }}
+          <router-link
+            v-if="request.doctor.id === user.id"
+            :to="`/profile/${request.doctor.id}`"
+            class="custom-router-link"
+          >
+            {{ request.doctor.fullname }}
+          </router-link>
+          <router-link
+            v-else
+            :to="`/profile/${request.applicant.id}`"
+            class="custom-router-link"
+          >
+            {{ request.applicant.fullname }}
+          </router-link>
         </div>
         <div class="q-mx-md q-pa-sm"><q-icon name="hdr_strong" /></div>
         <div class="doc-created-at q-pa-sm">
@@ -46,7 +62,7 @@
           <q-badge
             v-if="request.document.tag.id !== user.tag.id"
             label="نامرتبط"
-            class="bg-red-1 text-redq-pa-sm"
+            class="bg-red-1 text-red q-py-xs"
           />
         </div>
       </div>

@@ -1,11 +1,15 @@
 <template>
-  <q-page padding class="q-px-xl q-py-sm rounded-borders shadow-24" v-if="requestedDoc">
+  <q-page
+    padding
+    class="q-px-xl q-py-sm rounded-borders shadow-24"
+    v-if="requestedDoc"
+  >
     <div class="text-h6 q-pa-md">
       {{ requestedDoc.name }}
     </div>
 
     <div class="row">
-      <div class="doc-description col-3 q-pa-md">
+      <div class="doc-description col-sm-6 col-md-3 q-pa-md">
         <div class="doc-box">
           <q-img src="../assets/online-doctor.svg" fit="fill" />
           <q-list>
@@ -77,7 +81,10 @@
             </q-btn>
           </div>
         </div>
-        <div class="request-list q-mt-md" v-if="user.id == requestedDoc.patient.id">
+        <div
+          class="request-list q-mt-md"
+          v-if="user.id == requestedDoc.patient.id"
+        >
           <label>درخواست ها</label>
           <div
             class="request-card doc-box bg-white q-mt-md q-pa-sm"
@@ -129,15 +136,10 @@
                     class="text-indigo-6"
                   />
                 </q-item-section>
-                <q-item-section class="text-grey" side
+                <q-item-section class="text-grey overflow-hidden" side
                   ><q-badge
-                    v-if="request.state !== 0"
                     :label="requestStateOptions[request.state]"
-                    :class="
-                      request.state == 1
-                        ? 'bg-red-1 text-red'
-                        : 'bg-green-1 text-positive'
-                    "
+                    :color="requestStateColors[request.state]"
                     class="q-pa-sm"
                     flat
                     dense
@@ -187,7 +189,7 @@
           </div>
         </div>
       </div>
-      <div class="doc-detail col-9 q-pa-md" v-if="requestedDoc.data">
+      <div class="doc-detail col-sm-6 col-md-9 q-pa-md" v-if="requestedDoc.data">
         <q-table
           :rows="convertDataToTable(requestedDoc.data)"
           :columns="dataColumns"
@@ -206,45 +208,7 @@
           </template>
         </q-table>
         <div class="q-mt-xl row justify-center">
-          <q-timeline color="indigo-6" layout="loose">
-            <q-timeline-entry
-              v-for="comment in userComments"
-              :key="comment.id"
-              :subtitle="
-                formattedPersianDate(comment.created_at) +
-                ' ' +
-                formattedPersianTime(comment.created_at)
-              "
-              side="left"
-            >
-              <q-chat-message
-                sent
-                :name="
-                  comment.author.fullname + ` ( ${comment.author.role.name} )`
-                "
-                class="q-pa-md"
-                text-color="black"
-                bg-color="indigo-1"
-              >
-                <template v-slot:default>
-                  <div class="text-left">
-                    {{ comment.text }}
-                  </div>
-                </template>
-                <template v-slot:stamp>
-                  <div class="q-mt-md">
-                    <q-btn
-                      @click="deleteComment(comment.id, requestedDoc.id)"
-                      class="bg-indigo-1 text-indigo-6 q-mr-xs"
-                      icon="delete"
-                      size="xs"
-                      flat
-                    />
-                    {{ diffDateText(comment.created_at) }}
-                  </div>
-                </template>
-              </q-chat-message>
-            </q-timeline-entry>
+          <q-timeline layout="loose" color="indigo-6">
             <q-timeline-entry
               side="left"
               v-if="
@@ -280,37 +244,18 @@
               </q-btn>
             </q-timeline-entry>
             <q-timeline-entry
-              v-for="comment in othersComment"
+              v-for="comment in comments"
               :key="comment.id"
-              :subtitle="
-                formattedPersianDate(comment.created_at) +
-                ' ' +
-                formattedPersianTime(comment.created_at)
-              "
-              side="right"
+              :side="comment.author.id === user.id ? 'left' : 'right'"
             >
-              <q-chat-message
-                :name="
-                  comment.author
-                    ? comment.author.fullname +
-                      ` ( ${comment.author.role.name} )`
-                    : ''
-                "
-                class="q-pa-md"
-                text-color="black"
-                bg-color="indigo-1"
-              >
-                <template v-slot:default>
-                  <div class="text-left">
-                    {{ comment.text }}
-                  </div>
-                </template>
-                <template v-slot:stamp>
-                  <div class="q-mt-md">
-                    {{ diffDateText(comment.created_at) }}
-                  </div>
-                </template>
-              </q-chat-message>
+              <CommentChat
+                :username="comment.author ? comment.author.fullname : ''"
+                :userid="comment.id ? comment.author.id : 0"
+                :description="comment.text"
+                :date="comment.created_at"
+                :side="comment.author.id === user.id ? 'left' : 'right'"
+                @remove="() => deleteComment(comment.id, requestedDoc.id)"
+              />
             </q-timeline-entry>
           </q-timeline>
         </div>
@@ -330,9 +275,13 @@ import { useMembership } from '../hooks/useMembership';
 import { useRequest } from '../hooks/useRequest';
 import { useTag } from '../hooks/useTag';
 import { useUser } from '../hooks/useUser';
+import CommentChat from '../components/Document/CommentChat.vue';
 
 export default defineComponent({
   name: 'PageIndex',
+  components: {
+    CommentChat,
+  },
   setup() {
     const $route = useRoute();
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -371,6 +320,7 @@ export default defineComponent({
       requestList,
       getRequestsByDocument,
       requestStateOptions,
+      requestStateColors
     } = useRequest();
 
     onMounted(() => getOneDocument($route.params.id as string));
@@ -436,6 +386,7 @@ export default defineComponent({
       createRequest,
       requestList,
       requestStateOptions,
+      requestStateColors,
       user,
       userComments,
       othersComment,

@@ -70,12 +70,6 @@
               flat
               @click="deleteDocument(props.row.id)"
             />
-            <q-btn
-              label="ویرایش"
-              size="sm"
-              class="bg-indigo-1 text-indigo-6 q-mx-xs"
-              flat
-            />
           </div>
           <div class="col-12">
             <q-expansion-item

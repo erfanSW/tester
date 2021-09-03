@@ -102,7 +102,7 @@ export class AppController {
           phone: user.phone,
         });
         this.activityService.createOne({
-          text: 'کاربر وارد شد  کرد',
+          text: 'کاربر وارد شد ',
           type: ActivityType.AUTHENTICATION,
           user: exisiting_user.id,
         });
