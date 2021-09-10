@@ -12,6 +12,7 @@ import {
   HttpStatus,
   UseGuards,
   Patch,
+  ParseBoolPipe,
 } from '@nestjs/common';
 import { DocumentService } from './document.service';
 import { DocumentDto } from './dto/document.dto';
@@ -65,6 +66,15 @@ export class DocumentController {
     @Param('tagid', ParseIntPipe) tagId: number,
   ) {
     return await this.documentService.updateTag(id, tagId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch(':id')
+  async updateDoc(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() doc: DocumentDto,
+  ) {
+    return await this.documentService.updateDoc(id, doc);
   }
 
   @UseGuards(JwtAuthGuard)

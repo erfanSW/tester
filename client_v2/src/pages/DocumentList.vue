@@ -14,6 +14,17 @@
           </template>
         </q-input>
       </template>
+      <template v-slot:top-left>
+        <q-btn-toggle
+          v-model="archived"
+          toggle-color="indigo"
+          :options="[
+            { label: 'آزمایش ها', value: false },
+            { label: 'آرشیو شده ها', value: true },
+          ]"
+          flat
+        />
+      </template>
       <template v-slot:item="props">
         <div
           class="row col-12 document-container rounded-borders q-pa-md q-mt-md"
@@ -47,15 +58,17 @@
               />
               {{ formattedPersianTime(props.row.created_at) }}
             </div>
-            <div class="q-mx-md q-pa-sm"><q-icon name="hdr_strong" /></div>
+            <div class="q-mx-md q-pa-sm" v-if="props.row.archived">
+              <q-icon name="hdr_strong" />
+            </div>
             <div class="doc-data-comments q-pa-sm">
               <q-icon
-                name="iconly:boldChat"
+                v-if="props.row.archived"
+                name="iconly:boldBookmark"
                 size="xs"
                 class="q-mr-sm"
                 color="indigo-6"
               />
-              4
             </div>
           </div>
           <q-space />
@@ -121,13 +134,15 @@ export default defineComponent({
     const { user } = useUser();
 
     const filter = ref<string>('');
+    const archived = ref<boolean>(false);
 
     const { documents, getDocuments, deleteDocument } = useDocument();
     onMounted(() => getDocuments());
 
     const filteredDocuments = computed((): DocumentInterface[] =>
-      documents.value.filter((doc: DocumentInterface) =>
-        doc.name.indexOf(filter.value) > -1
+      documents.value.filter(
+        (doc: DocumentInterface) =>
+          doc.name.indexOf(filter.value) > -1 && doc.archived == archived.value
       )
     );
 
@@ -171,7 +186,8 @@ export default defineComponent({
       deleteDocument,
       user,
       filter,
-      filteredDocuments
+      filteredDocuments,
+      archived,
     };
   },
 });

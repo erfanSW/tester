@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Document } from './document.entity';
+import { DocumentDto } from './dto/document.dto';
 import { DocumentInterface } from './interface/document.interface';
 
 @Injectable()
@@ -27,7 +28,7 @@ export class DocumentService {
   findById(id: number) {
     return this.documentRepository.findOne({
       where: { id },
-      loadRelationIds: true
+      loadRelationIds: true,
     });
   }
 
@@ -57,7 +58,10 @@ export class DocumentService {
   }
 
   updateTag(id: number, tagId: number) {
-    console.log(id, tagId);
     return this.documentRepository.update(id, { tag: tagId });
+  }
+
+  updateDoc(id: number, doc: DocumentDto) {
+    return this.documentRepository.update(id, { ...doc });
   }
 }

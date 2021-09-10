@@ -9,6 +9,7 @@ function useDocument() {
   const requestedDoc = ref<DocumentInterface>();
   const $router = useRouter();
   const updateTagLoading = ref<boolean>(false);
+  const updateArchivedLoading = ref<boolean>(false);
 
   async function getDocuments() {
     try {
@@ -27,7 +28,7 @@ function useDocument() {
 
   async function createDocument(doc: DocumentDto) {
     try {
-      console.log(doc)
+      console.log(doc);
       if (doc.name === '') {
         return Notify.create({
           message: 'لطفا عنوان آزمایش را وارد نمایید',
@@ -62,9 +63,29 @@ function useDocument() {
     try {
       updateTagLoading.value = true;
       await Docs.updateTag(id, tagId);
+      Notify.create({
+        message: 'عملیات با موفقیت انجام شد',
+        color: 'positive',
+      });
     } catch (error) {
+      Notify.create({ message: 'عملیات با خطا مواجه شد', color: 'red' });
     } finally {
       updateTagLoading.value = false;
+    }
+  }
+
+  async function updateArchived(id: number, archived: boolean) {
+    try {
+      updateArchivedLoading.value = true;
+      await Docs.updateArchived(id, archived);
+      Notify.create({
+        message: 'عملیات با موفقیت انجام شد',
+        color: 'positive',
+      });
+    } catch (error) {
+      Notify.create({ message: 'عملیات با خطا مواجه شد', color: 'red' });
+    } finally {
+      updateArchivedLoading.value = false;
     }
   }
 
@@ -77,6 +98,8 @@ function useDocument() {
     deleteDocument,
     updateTag,
     updateTagLoading,
+    updateArchived,
+    updateArchivedLoading,
   };
 }
 

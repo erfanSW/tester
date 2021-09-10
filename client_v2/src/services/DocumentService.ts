@@ -21,4 +21,11 @@ export default class Docs {
   static updateTag(id: number, tagId: number) {
     return Api().patch(`documents/${id}/${tagId}`);
   }
+
+  static updateArchived(id: number, archived: boolean) {
+    return Api().patch(`documents/${id}`, {
+      id,
+      archived,
+    });
+  }
 }

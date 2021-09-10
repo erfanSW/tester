@@ -48,13 +48,26 @@
                 />
               </q-item-section>
               <q-item-section class="text-grey">آرشیو</q-item-section>
-              <q-item-section class="text-grey" side>{{
-                requestedDoc.archive ? 'بله' : 'خیر'
-              }}</q-item-section>
+              <q-item-section class="text-grey" side>
+                <q-toggle
+                  v-if="user.id == requestedDoc.patient.id"
+                  v-model="requestedDoc.archived"
+                  @click="
+                    () => updateArchived(requestedDoc.id, requestedDoc.archived)
+                  "
+                  color="indigo"
+                  keep-color
+                  dense
+                />
+                <div v-else>{{ requestedDoc.archived ? 'بله' : 'خیر' }}</div>
+              </q-item-section>
             </q-item>
           </q-list>
         </div>
-        <div class="q-mt-lg" v-if="user.id == requestedDoc.patient.id">
+        <div
+          class="q-mt-lg"
+          v-if="user.id == requestedDoc.patient.id && !requestedDoc.archived"
+        >
           <q-select
             v-model="requestedDoc.tag"
             :options="tagList"
@@ -149,7 +162,10 @@
             </q-list>
           </div>
         </div>
-        <div class="q-mt-md" v-if="user.id == requestedDoc.patient.id">
+        <div
+          class="q-mt-md"
+          v-if="user.id == requestedDoc.patient.id && !requestedDoc.archived"
+        >
           <q-select
             v-model="newRequest.doctor"
             :options="doctors"
@@ -189,7 +205,10 @@
           </div>
         </div>
       </div>
-      <div class="doc-detail col-sm-6 col-md-9 q-pa-md" v-if="requestedDoc.data">
+      <div
+        class="doc-detail col-sm-6 col-md-9 q-pa-md"
+        v-if="requestedDoc.data"
+      >
         <q-table
           :rows="convertDataToTable(requestedDoc.data)"
           :columns="dataColumns"
@@ -219,6 +238,7 @@
               "
             >
               <q-input
+                v-if="!requestedDoc.archived"
                 v-model="commentText"
                 :rows="3"
                 label="متن"
@@ -226,6 +246,7 @@
                 filled
               />
               <q-btn
+                v-if="!requestedDoc.archived"
                 @click="
                   createComment({
                     title: '',
@@ -265,7 +286,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, computed } from 'vue';
+import { defineComponent, onMounted, computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { useDocument } from '../hooks/useDocument';
 import { usePdate } from '../hooks/usePdate';
@@ -302,6 +323,8 @@ export default defineComponent({
       requestedDoc,
       updateTag,
       updateTagLoading,
+      updateArchived,
+      updateArchivedLoading,
     } = useDocument();
     const {
       getCommentsByDocument,
@@ -320,8 +343,10 @@ export default defineComponent({
       requestList,
       getRequestsByDocument,
       requestStateOptions,
-      requestStateColors
+      requestStateColors,
     } = useRequest();
+
+    const archived = ref<boolean>(false);
 
     onMounted(() => getOneDocument($route.params.id as string));
     onMounted(() => getCommentsByDocument($route.params.id as string));
@@ -393,6 +418,9 @@ export default defineComponent({
       tagList,
       updateTag,
       updateTagLoading,
+      archived,
+      updateArchived,
+      updateArchivedLoading,
     };
   },
 });
