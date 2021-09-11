@@ -138,7 +138,6 @@ import { defineComponent, ref, onMounted, watch, computed } from 'vue';
 import { LoadingBar, Notify } from 'quasar';
 import { useDocument } from '../hooks/useDocument';
 import { useTesseract } from '../hooks/useTesseract';
-import { useExcel } from '../hooks/useExcel';
 import { useTag } from '../hooks/useTag';
 import { DocumentData } from '../interfaces/User';
 
@@ -219,15 +218,12 @@ export default defineComponent({
     const { initialize, recognize } = useTesseract();
     onMounted(() => initialize());
 
-    const { readExcel } = useExcel();
 
     watch(image, async (val) => {
       try {
         if (!val) {
           return;
         }
-        const result = readExcel(val as Blob);
-        return console.log(result);
         imageUrl.value = URL.createObjectURL(val);
         LoadingBar.start();
         const {
