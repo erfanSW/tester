@@ -7,6 +7,7 @@ function useTesseract() {
   let dialog: any;
 
   const worker = createWorker({
+    langPath: 'https://tessdata.projectnaptha.com/4.0.0',
     logger: (m) => {
       if (m.status === 'initializing api') {
         if (m.progress === 1) {

@@ -4,8 +4,30 @@
     class="q-px-xl q-py-sm rounded-borders shadow-24"
     v-if="requestedDoc"
   >
-    <div class="text-h6 q-pa-md">
-      {{ requestedDoc.name }}
+    <div class="row">
+      <div class="text-h6 q-pa-md">
+        {{ requestedDoc.name }}
+      </div>
+      <q-space />
+      <q-btn
+        v-if="requestedDoc.data"
+        color="indigo"
+        icon-right="iconly:boldPaper-Download"
+        no-caps
+        @click="exportTable(dataColumns, convertDataToTable(requestedDoc.data))"
+        flat
+      >
+        <q-tooltip> دانلود جداول </q-tooltip>
+      </q-btn>
+      <q-btn
+        color="indigo"
+        icon="iconly:boldDocument"
+        @click="printScreen"
+        flat
+        no-caps
+      >
+        <q-tooltip> پرینت صفحه </q-tooltip>
+      </q-btn>
     </div>
 
     <div class="row">
@@ -296,6 +318,7 @@ import { useMembership } from '../hooks/useMembership';
 import { useRequest } from '../hooks/useRequest';
 import { useTag } from '../hooks/useTag';
 import { useUser } from '../hooks/useUser';
+import { useExport } from '../hooks/useExport';
 import CommentChat from '../components/Document/CommentChat.vue';
 
 export default defineComponent({
@@ -392,6 +415,12 @@ export default defineComponent({
     const { tagList, getTags } = useTag();
     onMounted(() => getTags());
 
+    const { exportTable } = useExport();
+
+    const printScreen = function () {
+      window.print();
+    };
+
     return {
       formattedPersianDate,
       formattedPersianTime,
@@ -421,6 +450,8 @@ export default defineComponent({
       archived,
       updateArchived,
       updateArchivedLoading,
+      exportTable,
+      printScreen,
     };
   },
 });

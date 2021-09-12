@@ -17,6 +17,7 @@
           <q-file
             v-model="image"
             class="q-mt-md"
+            accept=".csv, .jpg, .jpeg"
             outlined
             dense
           >
@@ -139,6 +140,7 @@ import { LoadingBar, Notify } from 'quasar';
 import { useDocument } from '../hooks/useDocument';
 import { useTesseract } from '../hooks/useTesseract';
 import { useTag } from '../hooks/useTag';
+import { useCsv } from '../hooks/useCsv';
 import { DocumentData } from '../interfaces/User';
 
 export default defineComponent({
@@ -209,8 +211,6 @@ export default defineComponent({
       ]);
     };
 
-    const imageUrl = ref<string>();
-
     function clear_all() {
       image.value = null;
     }
@@ -218,13 +218,19 @@ export default defineComponent({
     const { initialize, recognize } = useTesseract();
     onMounted(() => initialize());
 
+    const { parseCsv } = useCsv();
 
     watch(image, async (val) => {
       try {
         if (!val) {
           return;
         }
-        imageUrl.value = URL.createObjectURL(val);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        if (/.+(\.csv)$/.test(val.name)) {
+          const result = (await parseCsv(val)) as string[][];
+          form_fields.value = [...form_fields.value, ...result];
+          return;
+        }
         LoadingBar.start();
         const {
           data: { text },
@@ -266,7 +272,6 @@ export default defineComponent({
       image,
       imageText,
       imageLines,
-      imageUrl,
       key_input,
       value_input,
       form_fields,
